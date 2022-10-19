@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.leads',
     'apps.company',
     'apps.appointments',
+    'rest_framework_simplejwt.token_blacklist',
 
 ]
 
@@ -66,12 +67,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    #     'rest_framework.permissions.AllowAny',
-    #     'rest_framework.permissions.IsAdminUser',
-    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
 }
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
