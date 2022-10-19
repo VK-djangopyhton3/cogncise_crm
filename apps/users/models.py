@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 
+from apps.company.models import Companies
 from utils.manager import UserManager
+from utils.options import USER_ROLES
 
 
 # Create your models here.
@@ -12,7 +15,7 @@ class CrmUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=254, unique=True, null=True, blank=True)
     name = models.CharField(max_length=254, null=True)
-    # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True)
+    # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
     # Account info
     is_superuser = models.BooleanField(default=False)
@@ -28,5 +31,11 @@ class CrmUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    def get_absolute_url(self):
-        return "/accounts/%i/" % (self.pk)
+    def __str__(self):
+        return self.name + '(' + self.email + ')'
+
+
+class UserRoles(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    company = models.OneToOneField(Companies, on_delete=models.CASCADE, null=True)
+    role = models.CharField(max_length=15, choices=USER_ROLES)

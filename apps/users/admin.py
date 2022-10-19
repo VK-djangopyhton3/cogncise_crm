@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from apps.users.models import CrmUser
+from apps.users.models import CrmUser, UserRoles
 
 
 # Register your models here.
@@ -33,4 +33,12 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ('groups', 'user_permissions',)
 
 
+class UserRolesAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'company', 'role']
+    list_filter = ['role']
+    search_fields = ['company__company_name', 'user__name']
+    ordering = ['id', ]
+
+
 admin.site.register(CrmUser, UserAdmin)
+admin.site.register(UserRoles, UserRolesAdmin)
