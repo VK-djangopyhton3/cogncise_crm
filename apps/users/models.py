@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # User info
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=254, unique=True, null=True, blank=True)
-    name = models.CharField(max_length=254, null=True)
+    name = models.CharField(max_length=254)
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
     # Account info

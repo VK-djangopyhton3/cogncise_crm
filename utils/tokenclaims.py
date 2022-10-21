@@ -9,8 +9,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['company'] ={}
         # Add custom claims
         token['name'] = user.name
-        token['company']['name'] = user.userroles.company.company_name
-        token['company']['role'] = user.userroles.role
+        # token['company']['name'] = user.userroles.company.company_name
+        # token['company']['role'] = user.userroles.role
         token['email'] = user.email
         token['phone'] = user.phone
         token['is_verified'] = user.is_verified
