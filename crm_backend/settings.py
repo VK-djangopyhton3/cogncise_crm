@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'apps.company',
     'apps.appointments',
     'rest_framework_simplejwt.token_blacklist',
-
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [

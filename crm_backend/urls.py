@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_swagger.views import get_swagger_view
 from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView
 
 from utils.tokenclaims import MyTokenObtainPairView
 
+schema_view = get_swagger_view(title='CRM API')
+
 urlpatterns = [
+    path('docs/', schema_view),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
