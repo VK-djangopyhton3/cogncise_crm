@@ -18,10 +18,13 @@ class UserViews(APIView):
         pass
 
     def post(self, request):
+
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
             return Response(success_response(serializer.data,'New user added'))
+
         return Response(fail_response(serializer.errors,'New user could not be added'))
 
     def put(self, request):
