@@ -21,11 +21,12 @@ from utils.tokenclaims import MyTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
     path('api/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('api/users/', include('apps.users.api.urls')),
-    path('api/leads/', include('apps.leads.api.urls')),
-    path('api/company/', include('apps.company.api.urls')),
-    path('api/appointments/', include('apps.appointments.api.urls'))
+    # path('api/leads/', include('apps.leads.api.urls')),
+    # path('api/company/', include('apps.company.api.urls')),
+    # path('api/appointments/', include('apps.appointments.api.urls'))
 ]
