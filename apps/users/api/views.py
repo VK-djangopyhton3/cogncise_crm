@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 # Create your views here.
-class UserViews(APIView):
+class UserCreateView(APIView):
     permission_classes = [IsAdmin]
 
     def post(self, request):
