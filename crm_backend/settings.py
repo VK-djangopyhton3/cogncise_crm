@@ -70,7 +70,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAdminUser',
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
@@ -138,7 +137,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'users.CrmUser'
+AUTH_USER_MODEL = 'users.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
