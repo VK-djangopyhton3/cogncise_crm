@@ -10,7 +10,7 @@ from utils.options import USER_ROLES
 
 
 # Create your models here.
-class CrmUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     # User info
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=254, unique=True, null=True, blank=True)
@@ -27,7 +27,7 @@ class CrmUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     # EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['name']
 
     objects = UserManager()
 
