@@ -6,7 +6,13 @@ class IsAdmin(BasePermission):
     my_safe_method = ['GET', 'PUT', 'POST', 'DELETE']
 
     def has_permission(self, request, view):
-
-        user_role = request.user.userroles.role  # taking token
+        user_role = request.user.userroles.role
         if request.method in self.my_safe_method:
             return user_role == 'admin'
+
+
+class IsUser(BasePermission):
+    my_safe_method = ['GET', 'PUT', 'DELETE']
+
+    def has_object_permission(self, request, view, obj):
+        return obj.id == request.user.id
