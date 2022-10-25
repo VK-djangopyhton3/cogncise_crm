@@ -37,5 +37,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserRoles(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    company = models.OneToOneField(Companies, on_delete=models.CASCADE, null=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
