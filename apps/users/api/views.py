@@ -72,7 +72,7 @@ class UserSearchList(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        company = user.userroles.companies
+        company = user.userroles.company
         queryset = User.objects.filter()
         if not user.is_staff and user.userroles.roles not in ['auditor', 'field_worker']:
             queryset = queryset.filter(userroles__company=company)

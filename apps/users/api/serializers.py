@@ -17,7 +17,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
         fields = ['id', 'name', 'email', 'phone', 'company', 'role', 'is_staff', 'is_active', 'is_verified']
 
     def get_company(self, obj):
-        return obj.userroles.companies.company_name
+        return obj.userroles.company.company_name
 
     def get_role(self, obj):
         return obj.userroles.role

@@ -7,7 +7,7 @@ class CustomPagination(pagination.PageNumberPagination):
         return Response({
             'response_code': status.HTTP_200_OK,
             'success': True,
-            'message': message,
+            # 'message': message,
             'links': {
                 'next': self.get_next_link(),
                 'previous': self.get_previous_link()

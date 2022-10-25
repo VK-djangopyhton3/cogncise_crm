@@ -75,7 +75,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 10
 }
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
