@@ -140,6 +140,12 @@ DATABASES = {
         'PORT': os.environ['DBPORT'],
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase',
+#     }
+# }
 
 AUTH_USER_MODEL = 'users.User'
 
