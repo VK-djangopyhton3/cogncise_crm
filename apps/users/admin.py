@@ -33,12 +33,12 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ('groups', 'user_permissions',)
 
 
-class UserRolesAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'company', 'role']
-    list_filter = ['role']
-    search_fields = ['company__company_name', 'user__name']
-    ordering = ['id', ]
+# class UserRolesAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'user', 'company', 'role']
+#     list_filter = ['role']
+#     search_fields = ['company__company_name', 'user__name']
+#     ordering = ['id', ]
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(UserRoles, UserRolesAdmin)
+# admin.site.register(UserRoles, UserRolesAdmin)
