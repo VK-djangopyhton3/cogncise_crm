@@ -15,5 +15,5 @@ class IsStaff(BasePermission):
 
     def has_permission(self, request, view):
         if request.method in self.my_safe_method:
-            return request.is_staff
+            return request.user.is_staff
 
