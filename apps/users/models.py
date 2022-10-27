@@ -12,8 +12,8 @@ from utils.options import USER_ROLES
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     # User info
-    email = models.EmailField(max_length=254, unique=True)
-    phone = models.CharField(max_length=254, unique=True, null=True, blank=True)
+    email = models.EmailField(max_length=254, unique=True, null=False)
+    phone = models.CharField(max_length=254, unique=True, null=True)
     name = models.CharField(max_length=254)
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
