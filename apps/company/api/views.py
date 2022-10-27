@@ -17,16 +17,16 @@ def create_company(request):
     if serializer.is_valid():
         serializer.save()
         return Response(success_response(serializer.data, 'New company created'))
-    return Response(fail_response(serializer.errors,'Company could not be created',status.HTTP_400_BAD_REQUEST))
+    return Response(fail_response(serializer.errors, 'Company could not be created', status.HTTP_400_BAD_REQUEST))
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAdmin])
-# def update_request(request):
-#     user = request.user
-#     company = user.userroles.company
-#     serializer = CompanyUpdateRequestSerializer(data=request.data, partial=True)
-#     if serializer.is_valid():
-#         serializer.save(company=company, requested_by=user)
-#         return Response(success_response(serializer.data, 'Update request has been sent'))
-#     return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+@api_view(['POST'])
+@permission_classes([IsAdmin])
+def update_request(request):
+    user = request.user
+    company = user.userroles.company
+    serializer = CompanyUpdateRequestSerializer(data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save(company=company, requested_by=user)
+        return Response(success_response(serializer.data, 'Update request has been sent'))
+    return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))

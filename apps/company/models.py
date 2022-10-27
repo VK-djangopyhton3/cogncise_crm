@@ -20,7 +20,7 @@ class CompanyUpdateRequests(models.Model):
     company_name = models.CharField(max_length=255, null=True, blank=True)
     company_address = models.CharField(max_length=255, null=True, blank=True)
     ABN = models.CharField(max_length=255, null=True, blank=True)
-    is_approved = models.BooleanField(default=None)
+    is_approved = models.BooleanField(default=None,null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     remarks = models.TextField()
