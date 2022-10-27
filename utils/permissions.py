@@ -6,7 +6,6 @@ class IsAdmin(BasePermission):
     my_safe_method = ['GET', 'PUT', 'POST', 'DELETE']
 
     def has_permission(self, request, view):
-        # print(request.user.)
         user_role = request.user.userroles.role
         if request.method in self.my_safe_method:
             return user_role == 'admin'
