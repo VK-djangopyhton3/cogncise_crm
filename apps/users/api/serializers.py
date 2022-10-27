@@ -10,17 +10,16 @@ User = get_user_model()
 
 class UserSerializer(DynamicFieldsModelSerializer):
     company = serializers.SerializerMethodField()
-    role = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'phone', 'company', 'role', 'is_staff', 'is_active', 'is_verified']
+        fields = ['id', 'name', 'email', 'phone', 'company', 'is_staff', 'is_active', 'is_verified']
 
     def get_company(self, obj):
-        return obj.userroles.company.company_name
-
-    def get_role(self, obj):
-        return obj.userroles.role
+        user = UserRoles.objects.filter(user=obj)
+        if not user.exists():
+            return None
+        return UserSerializer(user, many=True, fields=['company']).data
 
 
 class UserRolesSerializer(DynamicFieldsModelSerializer):
