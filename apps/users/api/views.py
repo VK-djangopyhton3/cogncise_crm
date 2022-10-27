@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.users.api.serializers import UserSerializer
+from apps.users.api.serializers import UserSerializer, UserRolesSerializer
 from apps.users.models import UserRoles
 from utils.permissions import IsAdmin
 from utils.responseformat import success_response, fail_response
@@ -57,7 +57,10 @@ def delete_user(request):
 def add_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        if request.user.is_staff and 'staff' in request.data['staff']:
+            serializer.save(is_active=True, is_staff=request.data['staff'])  # is_active default=True not working
+        else:
+            serializer.save(is_active=True)  # is_active default=True not working
         return Response(success_response(serializer.data, 'New user added'))
     return Response(fail_response(serializer.errors, 'New user could not be added'))
 
@@ -78,3 +81,16 @@ class UserSearchList(ListAPIView):
     filter_backends = [SearchFilter]
     search_fields = ['id', 'name', 'email', 'phone', 'is_staff', 'is_active', 'userroles__role',
                      'userroles__company__company_name', 'userroles__company__ABN']
+
+
+@api_view(['POST'])
+@permission_classes([IsAdmin])
+def assign_role(request):
+    company = request.user.userroles.company
+    user = User.objects.get(id=request.data['user_id'])
+    serializer = UserRolesSerializer(data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save(company=company, user=user)
+        return Response(success_response(serializer.data, 'New roles and company assigned'))
+    return Response(
+        fail_response((serializer.errors, 'User could not be assigned a role', status.HTTP_400_BAD_REQUEST)))
