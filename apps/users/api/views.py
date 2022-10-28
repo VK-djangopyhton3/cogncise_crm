@@ -5,7 +5,6 @@ from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from apps.users.api.serializers import UserSerializer, UserRolesSerializer
 from apps.users.models import UserRoles
@@ -58,7 +57,8 @@ def add_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         if request.user.is_staff and 'staff' in request.data['staff']:
-            serializer.save(is_active=True, is_staff=request.data['staff'])  # is_active default=True not working
+            serializer.save(is_active=True, is_staff=request.data[
+                'staff'])  # is_active default=True not working, is_staff incase cg admin creates a user
         else:
             serializer.save(is_active=True)  # is_active default=True not working
         return Response(success_response(serializer.data, 'New user added'))
