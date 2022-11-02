@@ -50,5 +50,6 @@ urlpatterns = [
     path('api/users/', include('apps.users.api.urls')),
     # path('api/leads/', include('apps.leads.api.urls')),
     path('api/company/', include('apps.company.api.urls')),
+    path('api/customer/', include('apps.customer.api.urls')),
     # path('api/appointments/', include('apps.appointments.api.urls'))
 ]

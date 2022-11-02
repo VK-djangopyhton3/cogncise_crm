@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.filters import SearchFilter
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from apps.company.api.serializers import CompanyUpdateRequestSerializer, CompaniesSerializer
-from apps.company.models import CompanyUpdateRequests
+from apps.company.models import CompanyUpdateRequests, Companies
 from utils.permissions import IsAdmin, IsStaff
 from utils.responseformat import success_response, fail_response
 
@@ -57,3 +59,11 @@ def update_company_info(request):
         serializer.save()
         return Response(success_response(serializer.data, 'Approval granted = ' + str(request.data['is_approved'])))
     return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+
+class CompanySearchList(ListAPIView):
+    serializer_class = CompaniesSerializer
+    permission_classes = [IsStaff]
+    queryset = Companies.objects.all()
+    message = "Company list"
+    filter_backends = [SearchFilter]
+    search_fields = ['id', 'company_name', 'ABN']
