@@ -48,3 +48,6 @@ class CustomerListSearch(ListAPIView):
 @permission_classes([IsManager])
 def sms_consent_update(request):
     customer = CustomerInfo.objects.get(customer__id=request.data['user_id'], agency=request.user.userroles.company)
+    customer.sms_consent = request.data['sms_consent']
+    customer.save()
+    return Response(success_response({'sms_consent': request.data['sms_consent']}, "sms consent updated"))
