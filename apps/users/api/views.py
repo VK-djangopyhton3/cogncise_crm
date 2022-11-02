@@ -56,7 +56,7 @@ def delete_user(request):
 def add_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        if request.user.is_staff and 'staff' in request.data['staff']:
+        if request.user.is_staff and 'staff' in request.data:
             serializer.save(is_active=True, is_staff=request.data[
                 'staff'])  # is_active default=True not working, is_staff incase cg admin creates a user
         else:

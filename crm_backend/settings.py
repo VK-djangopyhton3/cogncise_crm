@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.leads',
     'apps.company',
     'apps.appointments',
+    'apps.customer',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_swagger',
     'drf_yasg'
