@@ -8,6 +8,7 @@ class Companies(models.Model):
     company_name = models.CharField(max_length=255, null=True, blank=True, unique=True)
     company_address = models.CharField(max_length=255)
     ABN = models.CharField(max_length=255, null=True, unique=True)
+    is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

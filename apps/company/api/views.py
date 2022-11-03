@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -7,8 +8,10 @@ from rest_framework.response import Response
 
 from apps.company.api.serializers import CompanyUpdateRequestSerializer, CompaniesSerializer
 from apps.company.models import CompanyUpdateRequests, Companies
-from utils.permissions import IsAdmin, IsStaff
+from utils.permissions import IsAdmin, IsStaff, IsManager
 from utils.responseformat import success_response, fail_response
+
+User = get_user_model()
 
 
 # Create your views here.
@@ -60,6 +63,7 @@ def update_company_info(request):
         return Response(success_response(serializer.data, 'Approval granted = ' + str(request.data['is_approved'])))
     return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
 
+
 class CompanySearchList(ListAPIView):
     serializer_class = CompaniesSerializer
     permission_classes = [IsStaff]
@@ -67,3 +71,14 @@ class CompanySearchList(ListAPIView):
     message = "Company list"
     filter_backends = [SearchFilter]
     search_fields = ['id', 'company_name', 'ABN']
+
+
+@api_view(["PUT"])
+@permission_classes([IsStaff])
+def delete_company(request):
+    company = Companies.objects.get(id=request.data['id'])
+    company.is_active = False
+    company.save()
+    users = User.objects.filter(userroles__company=company)
+    users.update(is_active=False)
+    return Response(success_response(None, "Company deleted"))
