@@ -82,3 +82,16 @@ def delete_company(request):
     users = User.objects.filter(userroles__company=company)
     users.update(is_active=False)
     return Response(success_response(None, "Company deleted"))
+
+
+@api_view(["GET"])
+@permission_classes([IsManager])
+def company_details(request):
+    company = Companies.objects.filter(id=request.GET['id'])
+    if not request.user.is_staff:
+        company = company.filter(company_name=request.user.userroles.company.company_name)
+    if company.exists():
+        serializer = CompaniesSerializer(company[0], many=False)
+        return Response(success_response(serializer.data, "company details"))
+    return Response(
+        fail_response(None, "company details cannot be displayed or does not exist", status.HTTP_400_BAD_REQUEST))
