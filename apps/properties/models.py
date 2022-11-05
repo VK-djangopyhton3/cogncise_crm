@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class PropertyTypes(models.Model):
-    unit_type = models.CharField(max_length=255)
+    type_name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.unit_type
@@ -21,3 +21,4 @@ class Property(models.Model):
     suburb = models.CharField(max_length=255)
     postcode = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
+
