@@ -30,18 +30,9 @@ def add_customer(request):
 class CustomerListSearch(ListAPIView):
     serializer_class = CustomerInfoSerializer
     permission_classes = [IsManager]
-
-    def get_queryset(self):
-        user = self.request.user
-        company = user.userroles.company
-        queryset = CustomerInfo.objects.filter()
-        if not user.is_staff and user.userroles.role not in ['auditor', 'field_worker']:
-            queryset = queryset.filter(agency=company)
-        return queryset
-
+    queryset = CustomerInfo.objects.filter()
     filter_backends = [SearchFilter]
-    search_fields = ['id', 'customer__name', 'type', 'customer__phone', 'customer__email', 'created_by__name',
-                     'agency__company_name']
+    search_fields = ['id', 'customer__name', 'type', 'customer__phone', 'customer__email', ]
 
 
 @api_view(["PUT"])

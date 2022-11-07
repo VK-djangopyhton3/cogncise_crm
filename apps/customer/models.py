@@ -10,7 +10,4 @@ class CustomerInfo(models.Model):
                                     null=False, blank=False)
     type = models.CharField(max_length=30, choices=CUSTOMER_TYPE)
     sms_consent = models.CharField(max_length=30, choices=SMS_CONSENT)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    agency = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
-    created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
