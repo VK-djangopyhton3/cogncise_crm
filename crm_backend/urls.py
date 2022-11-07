@@ -32,7 +32,7 @@ schema_view = get_schema_view(
         description="",
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=[permissions.AllowAny,],
 )
 
 urlpatterns = [
@@ -49,6 +49,8 @@ urlpatterns = [
     path('api/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('api/users/', include('apps.users.api.urls')),
     # path('api/leads/', include('apps.leads.api.urls')),
-    # path('api/company/', include('apps.company.api.urls')),
+    path('api/company/', include('apps.company.api.urls')),
+    path('api/customer/', include('apps.customer.api.urls')),
+    path('api/properties/', include('apps.properties.api.urls')),
     # path('api/appointments/', include('apps.appointments.api.urls'))
 ]
