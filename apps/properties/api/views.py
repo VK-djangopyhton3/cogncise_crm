@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.filters import SearchFilter
@@ -8,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.customer.models import CustomerInfo
-from apps.properties.api.serializer import PropertyTypeSerializer, PropertySerializer
+from apps.properties.api.serializer import PropertyTypeSerializer, PropertySerializer, StreetTypeSerializer
 from apps.properties.models import PropertyTypes, Property, StreetTypes
 from utils.permissions import IsStaff, IsManager
 from utils.responseformat import fail_response, success_response
@@ -64,6 +63,58 @@ def delete_property_type(request):
 
 
 '''
+Street types
+'''
+
+
+@api_view(['POST'])
+@permission_classes([IsStaff])
+def create_street_type(request):
+    serializer = StreetTypeSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(success_response(serializer.data, 'New street type created'))
+    return Response(fail_response(serializer.errors, 'Street type could not be created', status.HTTP_400_BAD_REQUEST))
+
+
+@api_view(['PUT'])
+@permission_classes([IsStaff])
+def update_street_type(request):
+    prop_type = StreetTypes.objects.get(id=request.data['id'])
+    serializer = StreetTypeSerializer(prop_type, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(success_response(serializer.data, 'Update success full'))
+    return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+
+
+class StreetTypeSearchList(ListAPIView):
+    serializer_class = StreetTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = StreetTypes.objects.filter()
+        print(queryset.count())
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(is_active=True)
+        return queryset
+
+    message = "street type list"
+    filter_backends = [SearchFilter]
+    search_fields = ['type_name']
+
+
+@api_view(["DELETE"])
+@permission_classes([IsStaff])
+def delete_street_type(request):
+    # print(request.data['id'])
+    street_type = StreetTypes.objects.get(id=request.data['id'])
+    street_type.is_active = False
+    street_type.save()
+    return Response(success_response(None, "Street type deleted"))
+
+
+'''
 Properties
 '''
 
@@ -101,7 +152,7 @@ class PropertySearchList(ListAPIView):
         if not self.request.user.is_staff:
             queryset = queryset.filter(is_active=True)
         if "customer_id" in self.request.GET:
-            queryset = queryset.filter(customer__customer__id= self.request.GET['customer_id'])
+            queryset = queryset.filter(customer__customer__id=self.request.GET['customer_id'])
         return queryset
 
     filter_backends = [SearchFilter]
@@ -112,7 +163,6 @@ class PropertySearchList(ListAPIView):
 @api_view(['PUT'])
 @permission_classes([IsManager])
 def update_property(request):
-
     if "is_active" in request.data:
         return Response(
             fail_response(request.data, "You are not authorized delete a property", status.HTTP_401_UNAUTHORIZED))
