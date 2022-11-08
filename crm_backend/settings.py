@@ -204,3 +204,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:*",
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}
+

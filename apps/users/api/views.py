@@ -26,18 +26,17 @@ def view_user(request):
     return Response(success_response(serializer.data, 'user deleted'))
 
 
-@api_view(['UPDATE'])
+@api_view(['PUT'])
 @permission_classes([IsAdmin])
-def user_details_update(request):
+def update_user_details(request):
     user = User.objects.get(id=request.data['id'])
     if not request.is_staff:
         user = user.filter(userroles__company=request.user.userrole.company)
     serializer = UserSerializer(user, many=False, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return success_response(serializer.data, 'user details updated')
-    return fail_response(serializer.errors, "details could not be updated", status.HTTP_400_BAD_REQUEST)
-
+        return Response(success_response(serializer.data, 'user details updated'))
+    return Response(fail_response(serializer.errors, "details could not be updated", status.HTTP_400_BAD_REQUEST))
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
