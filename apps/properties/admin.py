@@ -16,6 +16,7 @@ class StreetTypesAdmin(admin.ModelAdmin):
     search_fields = ['id', 'type_name']
     list_filter = ['is_active']
     ordering = ['id', ]
+
 class PropertyAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'street_name', 'street_type', 'suffix', 'suburb', 'postcode', 'state', 'is_active']
     list_filter = ['is_active', 'street_type']
