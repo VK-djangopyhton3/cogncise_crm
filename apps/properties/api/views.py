@@ -119,11 +119,20 @@ Properties
 '''
 
 
+def unassign_billing_address(customer):
+    property_check = Property.objects.filter(customer=customer, is_billing_address=True)
+    property_check.update(is_billing_address=False)
+    return True
+
+
 @api_view(["POST"])
 @permission_classes([IsManager])
 def property_add(request):
     customer = CustomerInfo.objects.get(customer__id=request.data['customer_id'])
     types = PropertyTypes.objects.get(id=request.data['property_type_id'])
+    if "is_billing_address" in request.data:
+        if request.data['is_billing_address']:
+            unassign_billing_address(customer)
     serializer = PropertySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(customer=customer, property_type=types)
@@ -163,15 +172,21 @@ class PropertySearchList(ListAPIView):
 @api_view(['PUT'])
 @permission_classes([IsManager])
 def update_property(request):
+    properties = Property.objects.get(id=request.data['id'])
+    property_type = properties.property_type
+    street_type = properties.street_type
+
     if "is_active" in request.data:
         return Response(
             fail_response(request.data, "You are not authorized delete a property", status.HTTP_401_UNAUTHORIZED))
 
-    properties = Property.objects.get(id=request.data['id'])
-    property_type = properties.property_type
-    street_type = properties.street_type
+    if "is_billing_address" in request.data:
+        if request.data['is_billing_address']:
+            unassign_billing_address(properties.customer)
+
     if "property_type_id" in request.data:
         property_type = PropertyTypes.objects.get(id=request.data["property_type_id"])
+
     if "street_type_id" in request.data:
         street_type = StreetTypes.objects.get(id=request.data["street_type_id"])
 

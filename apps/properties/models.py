@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint, Q
 
 from apps.customer.models import CustomerInfo
 
@@ -35,6 +36,12 @@ class Property(models.Model):
     postcode = models.CharField(max_length=255)
     state = models.CharField(max_length=255, null=False, blank=False)
     is_active = models.BooleanField(default=True)
+    is_billing_address = models.BooleanField(default=False)
 
     def __str__(self):
         return self.customer.customer.name
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['customer'], condition=Q(is_billing_address=True), name='unique_billing_address'),
+        ]
