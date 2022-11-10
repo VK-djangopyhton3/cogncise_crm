@@ -17,20 +17,24 @@ class WorkType(models.Model):
         return self.work_type
 
 
-class Leads(models.Model):
+class Jobs(models.Model):
     customer = models.ForeignKey(CustomerInfo, on_delete=models.CASCADE)
     property_address = models.ForeignKey(Property, on_delete=models.CASCADE)
     agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     work_type = models.ForeignKey(WorkType, on_delete=models.CASCADE)
+    lead_status = models.CharField(max_length=50, choices=LEAD_STATUS)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    lead_status = models.CharField(max_length=50, choices=LEAD_STATUS)
 
+    def __str__(self):
+        return self.customer.customer.name
 
-class LeadTransferHistory(models.Model):
-    lead = models.ForeignKey(Leads, on_delete=models.CASCADE)
+class JobTransferHistory(models.Model):
+    lead = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     agency = models.ForeignKey(Companies, on_delete=models.CASCADE)
     assignee_number = models.IntegerField()
     assigned_on = models.DateTimeField(auto_now=True)
     is_current_assignee = models.BooleanField(default=True)
 
+    def __int__(self):
+        return self.lead.id
