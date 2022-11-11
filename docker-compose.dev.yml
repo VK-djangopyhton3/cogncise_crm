@@ -3,11 +3,11 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./app
+      context: ./apps
       dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./app/:/usr/src/app/
+      - ./apps/:/usr/src/apps/
     ports:
       - 8000:8000
     env_file:
@@ -32,8 +32,8 @@ services:
       - 443:443
       - 80:80
     volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
+      - static_volume:/cogncise/apps/web/staticfiles
+      - media_volume:/cogncise/apps/web/mediafiles
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
