@@ -4,10 +4,9 @@ FROM python:3.10.0-alpine
 # set work directory
 # create the appropriate directories
 ENV HOME=/home/ubuntu/cogncise/crm_backend/
-WORKDIR $HOME
-
 RUN mkdir staticfiles
 RUN mkdir mediafiles
+WORKDIR $HOME
 
 
 # set environment variables
@@ -28,4 +27,5 @@ RUN sed -i 's/\r$//g' ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # copy project
-COPY . .
+# copy project
+COPY . $APP_HOME

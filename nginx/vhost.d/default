@@ -1,9 +1,9 @@
 location /static/ {
-  alias /home/ubuntu/cogncise/apps/web/staticfiles/
+  alias /home/ubuntu/cogncise/crm_backend/staticfiles/
   add_header Access-Control-Allow-Origin *;
 }
 
 location /media/ {
-  alias /home/ubuntu/cogncise/apps/web/mediafiles/;
+  alias /home/ubuntu/cogncise/crm_backend/mediafiles/;
   add_header Access-Control-Allow-Origin *;
 }
