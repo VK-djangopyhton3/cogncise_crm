@@ -3,11 +3,12 @@ FROM python:3.10.0-alpine
 
 # set work directory
 # create the appropriate directories
-ENV HOME=/home/ubuntu/cogncise/crm_backend
-ENV APP_HOME=/home/ubuntu/cogncise/crm_backend
-RUN mkdir -p $APP_HOME/staticfiles
-RUN mkdir -p $APP_HOME/mediafiles
-WORKDIR $APP_HOME
+ENV HOME=/home/ubuntu/cogncise/crm_backend/
+WORKDIR $HOME
+
+RUN mkdir staticfiles
+RUN mkdir mediafiles
+
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
