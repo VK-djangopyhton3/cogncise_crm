@@ -5,8 +5,8 @@ FROM python:3.10.0-alpine
 # create the appropriate directories
 ENV HOME=/home/ubuntu/cogncise/crm_backend
 ENV APP_HOME=/home/ubuntu/cogncise/crm_backend
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
+RUN mkdir -p $APP_HOME/staticfiles
+RUN mkdir -p $APP_HOME/mediafiles
 WORKDIR $APP_HOME
 
 # set environment variables
