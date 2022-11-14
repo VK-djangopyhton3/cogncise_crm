@@ -6,8 +6,10 @@ services:
       context: ./
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
+
     volumes:
-      - ./apps/:/usr/src/apps/
+      - static_volume:/home/ubuntu/cogncise/apps/web/staticfiles
+      - media_volume:/home/ubuntu/cogncise/apps/web/mediafiles
     ports:
       - 8000:8000
     env_file:

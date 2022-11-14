@@ -16,6 +16,9 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
+RUN mkdir ./apps/staticfiles
+RUN mkdir ./apps/mediafiles
+
 # copy entrypoint.sh
 COPY ./entrypoint.sh .
 RUN sed -i 's/\r$//g' ./entrypoint.sh
