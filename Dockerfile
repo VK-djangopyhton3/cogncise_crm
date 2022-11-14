@@ -2,7 +2,13 @@
 FROM python:3.10.0-alpine
 
 # set work directory
-WORKDIR .
+# create the appropriate directories
+ENV HOME=/home/ubuntu/cogncise/crm_backend
+ENV APP_HOME=/home/ubuntu/cogncise/crm_backend/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
+WORKDIR $APP_HOME
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -15,9 +21,6 @@ RUN apk update \
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
-
-RUN mkdir ./apps/staticfiles
-RUN mkdir ./apps/mediafiles
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh .
