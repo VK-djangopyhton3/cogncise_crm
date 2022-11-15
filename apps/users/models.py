@@ -39,3 +39,8 @@ class UserRoles(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
+
+
+class StaffAssociation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
