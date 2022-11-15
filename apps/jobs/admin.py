@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.jobs.models import WorkType, Jobs
+from apps.jobs.models import WorkType, Jobs, JobTransferHistory
 
 
 # Register your models here.
@@ -28,3 +28,4 @@ class JobTransferHistoryAdmin(admin.ModelAdmin):
 
 admin.site.register(WorkType, WorkTypeAdmin)
 admin.site.register(Jobs, JobAdmin)
+admin.site.register(JobTransferHistory, JobTransferHistoryAdmin)
