@@ -55,7 +55,6 @@ class PropertyTypeSearchList(ListAPIView):
 @api_view(["DELETE"])
 @permission_classes([IsStaff])
 def delete_property_type(request):
-    # print(request.data['id'])
     property_type = PropertyTypes.objects.get(id=request.data['id'])
     property_type.is_active = False
     property_type.save()
@@ -94,7 +93,6 @@ class StreetTypeSearchList(ListAPIView):
 
     def get_queryset(self):
         queryset = StreetTypes.objects.filter()
-        print(queryset.count())
         if not self.request.user.is_staff:
             queryset = queryset.filter(is_active=True)
         return queryset
@@ -107,7 +105,6 @@ class StreetTypeSearchList(ListAPIView):
 @api_view(["DELETE"])
 @permission_classes([IsStaff])
 def delete_street_type(request):
-    # print(request.data['id'])
     street_type = StreetTypes.objects.get(id=request.data['id'])
     street_type.is_active = False
     street_type.save()

@@ -16,10 +16,11 @@ class UserSerializer(DynamicFieldsModelSerializer):
         fields = ['id', 'name', 'email', 'phone', 'company', 'is_staff', 'is_active', 'is_verified']
 
     def get_company(self, obj):
+        # print(obj)
         user = UserRoles.objects.filter(user=obj)
         if not user.exists():
             return None
-        return UserSerializer(user, many=True, fields=['company']).data
+        return UserRolesSerializer(user, many=True, fields=['company', 'role']).data
 
 
 class UserRolesSerializer(DynamicFieldsModelSerializer):
