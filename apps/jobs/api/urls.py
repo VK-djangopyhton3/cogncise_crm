@@ -12,4 +12,5 @@ urlpatterns = [
     path('transfer-job-agency/', views.transfer_job_agency, name='update-job-agency'),
     path('transfer-job-agent/', views.transfer_job_agent, name='update-job-agent'),
     path('list-jobs/', views.JobListSearch.as_view(), name='update-job-agent'),
+    path('view-jobs/', views.view_job_details, name='view-job-details'),
 ]

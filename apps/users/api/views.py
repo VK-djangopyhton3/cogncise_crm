@@ -6,9 +6,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from apps.company.models import Companies
 from apps.users.api.serializers import UserSerializer, UserRolesSerializer
 from apps.users.models import UserRoles
-from utils.permissions import IsAdmin
+from utils.permissions import IsAdmin, IsSuper, IsManager
 from utils.responseformat import success_response, fail_response
 
 User = get_user_model()
@@ -38,15 +39,17 @@ def update_user_details(request):
         return Response(success_response(serializer.data, 'user details updated'))
     return Response(fail_response(serializer.errors, "details could not be updated", status.HTTP_400_BAD_REQUEST))
 
+
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsManager])
 def delete_user(request):
-    user = request.user
-    company = UserRoles.objects.get(user=request.user).company_name
-    if 'id' in request.GET and (request.user.userrole.company.company_name == company or request.user.is_staff == True):
-        user = User.objects.get(id=request.GET['id'])
-    user.is_active = False
-    user.save()
+    user = User.objects.filter(id=request.data['user_id'])
+    if request.user.is_staff and not request.user.is_superuser:
+        user = user.filter(userroles__companies=request.data['company_id'],
+                           userroles__companies__staffassocites__user=request.user)
+    if not request.is_staff:
+        user = user.filter(userroles__companies=request.user.userroles.company)
+    user.update(is_active=False)
     return Response(success_response(None, 'user deleted'))
 
 
@@ -55,9 +58,10 @@ def delete_user(request):
 def add_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        if request.user.is_staff and 'staff' in request.data:
+        if request.user.is_superuser and 'staff' in request.data:
             serializer.save(is_active=True, is_staff=request.data[
-                'staff'])  # is_active default=True not working, is_staff incase cg admin creates a user
+                'is_staff'], is_superuser=request.data['is_superuser'])  # is_active default=True not working,
+            # is_staff incase cg admin creates a user
         else:
             serializer.save(is_active=True)  # is_active default=True not working
         return Response(success_response(serializer.data, 'New user added'))
@@ -70,9 +74,11 @@ class UserSearchList(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        company = user.userroles.company
         queryset = User.objects.filter()
+        if user.is_staff:
+            queryset = queryset.filter(userroles__company__id=self.request.GET['company_id'])
         if not user.is_staff and user.userroles.role not in ['auditor', 'field_worker']:
+            company = user.userroles.company
             queryset = queryset.filter(userroles__company=company)
         return queryset
 
@@ -93,3 +99,13 @@ def assign_role(request):
         return Response(success_response(serializer.data, 'New roles and company assigned'))
     return Response(
         fail_response((serializer.errors, 'User could not be assigned a role', status.HTTP_400_BAD_REQUEST)))
+
+
+@api_view(['PUT'])
+@permission_classes([IsSuper])
+def assign_companies(request):
+    user = User.objects.get(id=request.data['user_id'])
+    companies = [Companies(company__id=cid) for cid in request.data['company_id_list']]
+    associates = Companies.objects.bulk_create(companies)
+    associates.update(user=user)
+    return Response()

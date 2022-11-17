@@ -12,6 +12,8 @@ from apps.customer.models import CustomerInfo
 from apps.jobs.api.serializers import WorkTypeSerializer, JobSerializer, JobTransferHistorySerializer
 from apps.jobs.models import WorkType, Jobs, JobTransferHistory
 from apps.properties.models import Property
+from apps.users.api.serializers import UserSerializer
+from apps.users.models import StaffAssociate
 from utils.permissions import IsStaff, IsManager, IsAdmin
 from utils.responseformat import fail_response, success_response
 
@@ -132,12 +134,14 @@ def transfer_job_agent(request):
 
 class JobListSearch(ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsManager, ]
+    permission_classes = [IsStaff]
 
     def get_queryset(self):
         queryset = Jobs.objects.filter()
-        if not self.request.user.is_staff:
-            queryset.filter(agency=self.request.user.userroles.company)
+        if self.request.user.is_staff and not self.request.user.is_superuser:
+            queryset.filter(jobtransferhistory=self.request.GET['company_id'])
+        # if not self.request.user.is_staff:
+        #     queryset.filter(jobtransferhistory=self.request.user.userroles.)
         return queryset
 
     message = "Job list"
@@ -146,17 +150,16 @@ class JobListSearch(ListAPIView):
                      "property_address__building_name", "agent", "job_status"]
 
 
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def view_job_details(request):
-#     job = Jobs.objects.get(id=request.data['job_id'])
-#     if request.user.is_admin:
-#         agency = request.user.userroles.filter(company__id=request.GET['company_id'])
-#         agency = Companies.objects.get(id=request.data['company_id'],)
-#         job = Jobs.objects.get(id=request.data['job_id'], agency=request.user.userroles.company)
-#     agent = User.objects.get(id=request.data['agent_user_id'], userroles__company=request.user.userroles.company)
-#     serializer = JobSerializer(job, data={'agent': agent}, partial=True)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(success_response(serializer.data, "agent changed to " + agent.name))
-#     return Response(fail_response(serializer.errors, "agent could not be changed", status.HTTP_400_BAD_REQUEST))
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_job_details(request):
+    job = Jobs.objects.filter(id=request.GET['job_id'])
+    if not request.user.is_superuser:
+        job = job.filter(jobtransferhistory__agency__staffassociate__user__id=request.user.id)
+    if not request.user.is_staff:
+        agency = request.user.userroles.company
+        job = job.filter(jobtransferhistory__agency=agency, jobtransferhistory__is_current_assignee=True)
+    if job.exists():
+        serializer = JobSerializer(job.first(), many=False)
+        return Response(success_response(serializer.data, "job " + str(job[0].id) + " details"))
+    return Response(fail_response(None, "Job with this ID does not exists", status.HTTP_401_UNAUTHORIZED))

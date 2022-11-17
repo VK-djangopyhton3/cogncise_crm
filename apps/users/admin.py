@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from apps.users.models import User, UserRoles, StaffAssociation
+from apps.users.models import User, UserRoles, StaffAssociate
 
 
 # Register your models here.
@@ -40,13 +40,13 @@ class UserRolesAdmin(admin.ModelAdmin):
     ordering = ['id', ]
 
 
-class StaffAssociationAdmin(admin.ModelAdmin):
+class StaffAssociateAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'company']
     list_filter = ['company']
-    search_fields = ['user__name']
+    search_fields = ['company__company_name', 'user__name']
     ordering = ['id', ]
 
 
 admin.site.register(User, UserAdmin)
 admin.site.register(UserRoles, UserRolesAdmin)
-admin.site.register(StaffAssociation, StaffAssociationAdmin)
+admin.site.register(StaffAssociate, StaffAssociateAdmin)
