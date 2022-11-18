@@ -22,7 +22,6 @@ class Jobs(models.Model):
     property_address = models.ForeignKey(Property, on_delete=models.CASCADE)
     agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     work_type = models.ForeignKey(WorkType, on_delete=models.CASCADE)
-    job_status = models.CharField(max_length=50, choices=LEAD_STATUS, default='New Lead')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
