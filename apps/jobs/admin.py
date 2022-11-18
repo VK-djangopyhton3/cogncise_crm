@@ -13,8 +13,8 @@ class WorkTypeAdmin(admin.ModelAdmin):
 
 
 class JobAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer', 'agent', 'work_type', 'job_status']
-    list_filter = ['job_status', 'work_type']
+    list_display = ['id', 'customer', 'agent', 'work_type']
+    list_filter = ['work_type']
     search_fields = ['work_type']
     ordering = ['id', ]
 

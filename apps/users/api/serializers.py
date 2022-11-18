@@ -13,7 +13,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'phone', 'company', 'is_staff', 'is_active', 'is_verified']
+        fields = ['id', 'email', 'phone', 'company', 'is_staff', 'is_active', 'is_verified']
 
     def get_company(self, obj):
         # print(obj)
@@ -25,7 +25,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
 class UserRolesSerializer(DynamicFieldsModelSerializer):
     user = UserSerializer(many=False, read_only=True,
-                          fields=['id', 'name', 'email', 'phone', 'is_active', 'is_verified', 'is_staff'])
+                          fields=['id', 'email', 'phone', 'is_active', 'is_verified', 'is_staff'])
     company = CompaniesSerializer(many=False, read_only=False)
 
     class Meta:

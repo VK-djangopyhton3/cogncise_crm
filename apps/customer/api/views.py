@@ -42,3 +42,13 @@ def sms_consent_update(request):
     customer.sms_consent = request.data['sms_consent']
     customer.save()
     return Response(success_response({'sms_consent': request.data['sms_consent']}, "sms consent updated"))
+
+@api_view(['PUT'])
+@permission_classes([IsManager])
+def update_job_status(request):
+    lead = CustomerInfo.objects.get(id=request.data['customer_id'])
+    serializer = CustomerInfoSerializer(lead, data={'lead_status': request.data['job_status']})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(success_response(serializer.data, "Job status updated"))
+    return Response(fail_response(serializer.errors, 'job status could not be update'))

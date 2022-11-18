@@ -101,17 +101,6 @@ def add_job(request):
 
 
 @api_view(['PUT'])
-@permission_classes([IsManager])
-def update_job_status(request):
-    job = Jobs.objects.get(id=request.data['job_id'])
-    serializer = JobSerializer(job, data={'job_status': request.data['job_status']})
-    if serializer.is_valid():
-        serializer.save()
-        return Response(success_response(serializer.data, "Job status updated"))
-    return Response(fail_response(serializer.errors, 'job status could not be update'))
-
-
-@api_view(['PUT'])
 @permission_classes([IsAdmin])
 def transfer_job_agency(request):
     job = request.data['job_id']
