@@ -134,14 +134,14 @@ def transfer_job_agent(request):
 
 class JobListSearch(ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsStaff]
+    permission_classes = [IsManager]
 
     def get_queryset(self):
         queryset = Jobs.objects.filter()
         if self.request.user.is_staff and not self.request.user.is_superuser:
             queryset.filter(jobtransferhistory=self.request.GET['company_id'])
-        # if not self.request.user.is_staff:
-        #     queryset.filter(jobtransferhistory=self.request.user.userroles.)
+        if not self.request.user.is_staff:
+            queryset.filter(jobtransferhistory__agency=self.request.user.userroles.company)
         return queryset
 
     message = "Job list"
