@@ -1,22 +1,26 @@
+from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from apps.users.api.serializers import UserSerializer
+
+User = get_user_model()
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['company'] ={}
-        # Add custom claims
-        token['name'] = user.name
-        # token['company']['name'] = user.userroles.company.company_name
-        # token['company']['role'] = user.userroles.role
-        token['email'] = user.email
-        token['phone'] = user.phone
-        token['is_verified'] = user.is_verified
-        token['is_staff'] = user.is_staff
 
-        return token
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        my_user = User.objects.filter(pk=self.user.id).first()
+        if my_user:
+            # use user serelizor or parse required fields
+            data['user'] = UserSerializer(my_user, many=False).data
+
+        return data
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

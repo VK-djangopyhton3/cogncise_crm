@@ -13,7 +13,7 @@ from utils.options import USER_ROLES
 class User(AbstractBaseUser, PermissionsMixin):
     # User info
     email = models.EmailField(max_length=254, unique=True, null=False)
-    phone = models.CharField(max_length=254, unique=True, null=True)
+    phone = models.CharField(max_length=254, unique=True, null=False)
 
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
@@ -26,13 +26,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    # EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['phone']
 
     objects = UserManager()
 
     def __str__(self):
-        return self.name + '(' + self.email + ')'
+        return self.email
 
 
 class UserRoles(models.Model):
