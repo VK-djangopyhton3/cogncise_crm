@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     # apps,
     'apps.users',
-    'apps.leads',
+    'apps.jobs',
     'apps.company',
     'apps.appointments',
     'apps.customer',
@@ -147,12 +147,7 @@ DATABASES = {
         'PORT': os.environ['DBPORT'],
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
-#     }
-# }
+
 
 AUTH_USER_MODEL = 'users.User'
 

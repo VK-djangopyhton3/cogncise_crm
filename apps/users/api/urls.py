@@ -9,4 +9,5 @@ urlpatterns = [
     path('list-users', views.UserSearchList.as_view(), name="list-user"),
     path('view-users', views.view_user, name="list-user"),
     path('assign-role/', views.assign_role, name="list-user"),
+    path('staff/associate-role/', views.assign_role, name="list-user"),
 ]

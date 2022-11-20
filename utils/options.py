@@ -16,3 +16,12 @@ SMS_CONSENT = (
     ('expressed', 'expressed'),
     ('no', 'no')
 )
+
+LEAD_STATUS = (
+    ("New Lead", "New Lead"),
+    ("Call Scheduled", "Call Scheduled"),
+    ("Contacted", "Contacted"),
+    ("Negotiation", "Negotiation"),
+    ("Won", "Won"),
+    ("Lost", "Lost"),
+)

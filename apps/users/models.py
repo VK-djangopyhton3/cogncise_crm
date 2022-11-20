@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # User info
     email = models.EmailField(max_length=254, unique=True, null=False)
     phone = models.CharField(max_length=254, unique=True, null=True)
-    name = models.CharField(max_length=254)
+
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
     # Account info
@@ -37,5 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserRoles(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
+
+
+class StaffAssociate(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
