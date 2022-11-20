@@ -12,7 +12,7 @@ from utils.options import USER_ROLES
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     # User info
-    email = models.EmailField(max_length=254, unique=True, null=False)
+    email = models.CharField(max_length=254, unique=True, null=False)
     phone = models.CharField(max_length=254, unique=True, null=False)
 
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
@@ -41,7 +41,14 @@ class UserRoles(models.Model):
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
 
+    def __str__(self):
+        return self.name
+
 
 class StaffAssociate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
+
+
+    def __str__(self):
+        return self.user.email

@@ -43,10 +43,10 @@ class UserViews(APIView, mixins.CreateModelMixin):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            if request.user.is_superuser and 'staff' in request.data:
-                serializer.save(is_staff=request.data['is_staff'], is_superuser=request.data['is_superuser'])
-            else:
-                serializer.save()
+            # if request.user.is_superuser and 'staff' in request.data:
+            #     serializer.save(is_staff=request.data['is_staff'], is_superuser=request.data['is_superuser'])
+            # else:
+            serializer.save()
             return Response(success_response(serializer.data, 'New user added'))
         return Response(fail_response(serializer.errors, 'New user could not be added'))
 
@@ -141,8 +141,6 @@ class UserRolesViews(APIView):
             serializer.save()
             return Response(success_response(serializer.data, "User role updated"))
         return Response(fail_response(None, "User role could not be updated"))
-
-
 
 
 @api_view(['PUT'])

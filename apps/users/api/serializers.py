@@ -15,7 +15,8 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone', 'company', 'customer', 'is_staff', 'is_active', 'is_verified']
+        fields = ['id', 'email', 'phone', 'password', 'company', 'customer', 'is_staff', 'is_active', 'is_verified']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def get_company(self, obj):
         user = UserRoles.objects.filter(user=obj)
@@ -36,6 +37,14 @@ class UserSerializer(DynamicFieldsModelSerializer):
             customer["company_name"] = user.company_name
             customer["company_ABN"] = user.company_ABN
         return customer
+
+    def create(self, validated_data):
+        user = User(
+            **validated_data
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 class UserRolesSerializer(DynamicFieldsModelSerializer):
