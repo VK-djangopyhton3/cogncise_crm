@@ -10,6 +10,7 @@ class IsAdmin(BasePermission):
 
         if not request.user.is_staff:
             user_role = request.user.userroles.role
+            print(user_role)
             if request.method in self.my_safe_method:
                 return user_role == 'admin'
 
@@ -49,6 +50,11 @@ class IsManager(BasePermission):
     my_safe_method = ['GET', 'PUT', 'POST', 'DELETE']
 
     def has_permission(self, request, view):
+
+        if request.method in self.my_safe_method and request.user.is_verified and not request.user.is_staff:
+            user_role = request.user.userroles.role
+            return user_role == 'admin' or user_role == 'manager'
+
         if request.method in ['PUT', 'POST', 'DELETE']:
             company = request.data['company_id']
         else:
@@ -57,6 +63,10 @@ class IsManager(BasePermission):
         if StaffAssociate.objects.filter(user=request.user, company__id=company).exists() or request.user.is_superuser:
             return request.user.is_verified
 
-        if request.method in self.my_safe_method and request.user.is_verified and not request.user.is_staff:
-            user_role = request.user.userroles.role
-            return user_role == 'admin' or user_role == 'manager'
+
+class IsViewOnly(BasePermission):
+    my_safe_method = ['GET']
+
+    def has_permission(self, request, view):
+        if request.method in self.my_safe_method:
+            return request.user.is_verified
