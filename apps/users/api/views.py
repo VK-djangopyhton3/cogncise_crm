@@ -121,7 +121,7 @@ class UserRolesViews(APIView):
             company = request.user.userroles.company
         else:
             company = Companies.objects.get(id=request.data['company_id'])
-        user = User.objects.get(id=request.data['user_id'], userroles__company=company)
+        user = User.objects.get(id=request.data['user_id'])
         serializer = UserRolesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(company=company, user=user)
