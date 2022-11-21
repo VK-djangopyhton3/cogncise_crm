@@ -33,7 +33,6 @@ class UserViews(APIView, mixins.CreateModelMixin):
                 company_id = self.request.data['company_id']
             elif self.request.user.userroles.role in roles and user_id is not self.request.user.id:
                 company_id = self.request.user.userroles.company.id
-
         if company_id is not None:
             user = user.filter(Q(userroles__company__id=company_id) | Q(customerinfo__agency__id=company_id))
         else:
