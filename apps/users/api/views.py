@@ -121,13 +121,14 @@ class UserRolesViews(APIView):
             company = request.user.userroles.company
         else:
             company = Companies.objects.get(id=request.data['company_id'])
+
         user = User.objects.get(id=request.data['user_id'])
         serializer = UserRolesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(company=company, user=user)
             return Response(success_response(serializer.data, 'New roles and company assigned'))
         return Response(
-            fail_response((serializer.errors, 'User could not be assigned a role', status.HTTP_400_BAD_REQUEST)))
+            fail_response(serializer.errors, "User could not be assigned a role", status.HTTP_400_BAD_REQUEST))
 
     def put(self):
         role = self.get_objects(self.request.data["user_id"])
@@ -144,7 +145,7 @@ class UserRolesViews(APIView):
 @permission_classes([IsSuper])
 def assign_companies(request):
     user = User.objects.get(id=request.data['user_id'])
-    companies = [Companies(company__id=cid) for cid in request.data['company_id_list']]
+    companies = [Companies(id=cid) for cid in request.data['company_id_list']]
     associates = Companies.objects.bulk_create(companies)
     associates.update(user=user)
     return Response()

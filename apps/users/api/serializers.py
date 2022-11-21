@@ -50,7 +50,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
 class UserRolesSerializer(DynamicFieldsModelSerializer):
     user = UserSerializer(many=False, read_only=True,
                           fields=['id', 'email', 'phone', 'is_active', 'is_verified', 'is_staff'])
-    company = CompaniesSerializer(many=False, read_only=False)
+    company = CompaniesSerializer(many=False, read_only=True)
 
     class Meta:
         model = UserRoles
