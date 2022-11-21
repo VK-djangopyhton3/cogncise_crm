@@ -117,7 +117,7 @@ class UserRolesViews(APIView):
         return roles.first()
 
     def post(self, request):
-        if not request.is_staff:
+        if not request.user.is_staff:
             company = request.user.userroles.company
         else:
             company = Companies.objects.get(id=request.data['company_id'])
