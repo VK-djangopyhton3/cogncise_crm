@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 
 from apps.company.models import Companies
 from apps.users.api.serializers import UserSerializer, UserRolesSerializer
-from apps.users.models import UserRoles
+from apps.users.models import UserRoles, StaffAssociate
 from utils.permissions import IsAdmin, IsSuper, IsManager, IsStaff, IsViewOnly
 from utils.responseformat import success_response, fail_response
 
@@ -145,7 +145,5 @@ class UserRolesViews(APIView):
 @permission_classes([IsSuper])
 def assign_companies(request):
     user = User.objects.get(id=request.data['user_id'])
-    companies = [Companies(id=cid) for cid in request.data['company_id_list']]
-    associates = Companies.objects.bulk_create(companies)
-    associates.update(user=user)
-    return Response()
+    [StaffAssociate(company=Companies.objects.get(id=cid), user=user).save() for cid in request.data['company_id_list']]
+    return Response(success_response(None, "Staff has been assigned"))
