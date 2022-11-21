@@ -61,7 +61,6 @@ class UserViews(APIView, mixins.CreateModelMixin):
             return Response(success_response(serializer.data, 'user details'))
         return Response(fail_response(None, 'user does not exist', status.HTTP_404_NOT_FOUND))
 
-    @api_view(['PUT'])
     def put(self, request):
         if 'is_active' in request.data:
             return Response(fail_response(None, 'Unauthorised', status.HTTP_401_UNAUTHORIZED))
@@ -74,7 +73,6 @@ class UserViews(APIView, mixins.CreateModelMixin):
             return Response(fail_response(None, 'User could not be deleted', status.HTTP_400_BAD_REQUEST))
         return Response(fail_response(None, 'User not found', status.HTTP_404_NOT_FOUND))
 
-    @api_view(['DELETE'])
     def delete(self):
         user = self.get_objects(self.request.data["user_id"])
         serializer = UserSerializer(user, data={"is_active": False}, partial=True)
