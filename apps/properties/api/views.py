@@ -5,6 +5,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.customer.models import CustomerInfo
 from apps.properties.api.serializer import PropertyTypeSerializer, PropertySerializer, StreetTypeSerializer
@@ -16,25 +17,31 @@ User = get_user_model()
 
 
 # Create your views here.
-@api_view(['POST'])
-@permission_classes([IsStaff])
-def create_property_type(request):
-    serializer = PropertyTypeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(success_response(serializer.data, 'New property type created'))
-    return Response(fail_response(serializer.errors, 'Property type could not be created', status.HTTP_400_BAD_REQUEST))
 
+class PropertyTypeView(APIView):
+    permission_classes = [IsStaff]
 
-@api_view(['PUT'])
-@permission_classes([IsStaff])
-def update_property_type(request):
-    prop_type = PropertyTypes.objects.get(id=request.data['id'])
-    serializer = PropertyTypeSerializer(prop_type, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(success_response(serializer.data, 'Update success full'))
-    return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+    def post(self):
+        serializer = PropertyTypeSerializer(data=self.request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(success_response(serializer.data, 'New property type created'))
+        return Response(fail_response(serializer.errors, 'Could not be created', status.HTTP_400_BAD_REQUEST))
+
+    def put(self):
+        prop_type = PropertyTypes.objects.get(id=self.request.data['id'])
+        serializer = PropertyTypeSerializer(prop_type, data=self.request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(success_response(serializer.data, 'Update success full'))
+        return Response(
+            fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+
+    def delete(self):
+        property_type = PropertyTypes.objects.get(id=self.request.data['id'])
+        property_type.is_active = False
+        property_type.save()
+        return Response(success_response(None, "Property type deleted"))
 
 
 class PropertyTypeSearchList(ListAPIView):
@@ -52,39 +59,35 @@ class PropertyTypeSearchList(ListAPIView):
     search_fields = ['type_name']
 
 
-@api_view(["DELETE"])
-@permission_classes([IsStaff])
-def delete_property_type(request):
-    property_type = PropertyTypes.objects.get(id=request.data['id'])
-    property_type.is_active = False
-    property_type.save()
-    return Response(success_response(None, "Property type deleted"))
-
-
 '''
 Street types
 '''
 
 
-@api_view(['POST'])
-@permission_classes([IsStaff])
-def create_street_type(request):
-    serializer = StreetTypeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(success_response(serializer.data, 'New street type created'))
-    return Response(fail_response(serializer.errors, 'Street type could not be created', status.HTTP_400_BAD_REQUEST))
+class StreetTypeViews(APIView):
+    permission_classes = [IsStaff]
 
+    def post(self):
+        serializer = StreetTypeSerializer(data=self.request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(success_response(serializer.data, 'New street type created'))
+        return Response(fail_response(serializer.errors, 'Could not be created', status.HTTP_400_BAD_REQUEST))
 
-@api_view(['PUT'])
-@permission_classes([IsStaff])
-def update_street_type(request):
-    prop_type = StreetTypes.objects.get(id=request.data['id'])
-    serializer = StreetTypeSerializer(prop_type, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(success_response(serializer.data, 'Update success full'))
-    return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+    def put(self):
+        street_type = StreetTypes.objects.get(id=self.request.data['id'])
+        serializer = StreetTypeSerializer(street_type, data=self.request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(success_response(serializer.data, 'Updated successfully'))
+        return Response(
+            fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
+
+    def delete(self):
+        property_type = PropertyTypes.objects.get(id=self.request.data['id'])
+        property_type.is_active = False
+        property_type.save()
+        return Response(success_response(None, "Property type deleted"))
 
 
 class StreetTypeSearchList(ListAPIView):
@@ -102,18 +105,33 @@ class StreetTypeSearchList(ListAPIView):
     search_fields = ['type_name']
 
 
-@api_view(["DELETE"])
-@permission_classes([IsStaff])
-def delete_street_type(request):
-    street_type = StreetTypes.objects.get(id=request.data['id'])
-    street_type.is_active = False
-    street_type.save()
-    return Response(success_response(None, "Street type deleted"))
-
-
 '''
 Properties
 '''
+
+
+class PropertyView(APIView):
+
+    def get_objects(self, pid):
+        return Property.objects.get(id=pid)
+
+    def post(self, request):
+        customer = CustomerInfo.objects.get(customer__id=request.data['customer_id'])
+        types = PropertyTypes.objects.get(id=request.data['property_type_id'])
+        serializer = PropertySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(customer=customer, property_type=types)
+            return Response(success_response(serializer.data, 'New property created'))
+        return Response(fail_response(serializer.errors, 'Property could not be created', status.HTTP_400_BAD_REQUEST))
+
+    def put(self, request):
+        customer = CustomerInfo.objects.get(customer__id=request.data['customer_id'])
+        types = PropertyTypes.objects.get(id=request.data['property_type_id'])
+        serializer = PropertySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(customer=customer, property_type=types)
+            return Response(success_response(serializer.data, 'New property created'))
+        return Response(fail_response(serializer.errors, 'Property could not be created', status.HTTP_400_BAD_REQUEST))
 
 
 def unassign_billing_address(customer):
