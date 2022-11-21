@@ -38,7 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserRoles(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE)
     role = models.CharField(max_length=15, choices=USER_ROLES)
 
     def __str__(self):
@@ -48,7 +48,6 @@ class UserRoles(models.Model):
 class StaffAssociate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
-
 
     def __str__(self):
         return self.user.email
