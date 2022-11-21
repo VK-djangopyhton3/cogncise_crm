@@ -111,6 +111,7 @@ Properties
 
 
 class PropertyView(APIView):
+    permission_classes = [IsManager | IsStaff]
 
     def get_objects(self, pid):
         return Property.objects.get(id=pid)
@@ -125,7 +126,7 @@ class PropertyView(APIView):
         return Response(fail_response(serializer.errors, 'Property could not be created', status.HTTP_400_BAD_REQUEST))
 
     def put(self, request):
-        customer = CustomerInfo.objects.get(customer__id=request.data['customer_id'])
+        customer = CustomerInfo.objects.get(id=request.data['customer_id'])
         types = PropertyTypes.objects.get(id=request.data['property_type_id'])
         serializer = PropertySerializer(data=request.data)
         if serializer.is_valid():
@@ -133,26 +134,25 @@ class PropertyView(APIView):
             return Response(success_response(serializer.data, 'New property created'))
         return Response(fail_response(serializer.errors, 'Property could not be created', status.HTTP_400_BAD_REQUEST))
 
+    def get(self, request):
+        properties = self.get_objects(request.GET['property_id'])
+        if properties:
+            serializer = PropertySerializer(properties, many=False)
+            return Response(success_response(serializer.data, "property details"))
+        return Response(fail_response(None, "property details cannot be displayed", status.HTTP_400_BAD_REQUEST))
 
-def unassign_billing_address(customer):
+
+@api_view(["PUT"])
+@permission_classes([IsManager])
+def assign_billing_address(request):
+    customer = request.user.id
+    if request.user.is_staff:
+        customer = request.data["user_id"]
+    customer = CustomerInfo.objects.get(customer__id=request.data["user_id"], agency=request.data['company_id'])
     property_check = Property.objects.filter(customer=customer, is_billing_address=True)
     property_check.update(is_billing_address=False)
-    return True
-
-
-@api_view(["POST"])
-@permission_classes([IsManager])
-def property_add(request):
-    customer = CustomerInfo.objects.get(customer__id=request.data['customer_id'])
-    types = PropertyTypes.objects.get(id=request.data['property_type_id'])
-    if "is_billing_address" in request.data:
-        if request.data['is_billing_address']:
-            unassign_billing_address(customer)
-    serializer = PropertySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(customer=customer, property_type=types)
-        return Response(success_response(serializer.data, 'New property created'))
-    return Response(fail_response(serializer.errors, 'Property could not be created', status.HTTP_400_BAD_REQUEST))
+    property = Property.objects.filter(customer=customer, id=request.data['property_id']).update(is_billin_address=True)
+    return Response(success_response(None, "Billing address updated"))
 
 
 @api_view(["GET"])
@@ -184,34 +184,6 @@ class PropertySearchList(ListAPIView):
                      'postcode', 'state']
 
 
-@api_view(['PUT'])
-@permission_classes([IsManager])
-def update_property(request):
-    properties = Property.objects.get(id=request.data['id'])
-    property_type = properties.property_type
-    street_type = properties.street_type
-
-    if "is_active" in request.data:
-        return Response(
-            fail_response(request.data, "You are not authorized delete a property", status.HTTP_401_UNAUTHORIZED))
-
-    if "is_billing_address" in request.data:
-        if request.data['is_billing_address']:
-            unassign_billing_address(properties.customer)
-
-    if "property_type_id" in request.data:
-        property_type = PropertyTypes.objects.get(id=request.data["property_type_id"])
-
-    if "street_type_id" in request.data:
-        street_type = StreetTypes.objects.get(id=request.data["street_type_id"])
-
-    serializer = PropertySerializer(properties, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save(property_type=property_type, street_type=street_type)
-        return Response(success_response(serializer.data, 'Update success full'))
-    return Response(fail_response(serializer.errors, 'There were issues in the request', status.HTTP_400_BAD_REQUEST))
-
-
 @api_view(["DELETE"])
 @permission_classes([IsStaff])
 def delete_property(request):
@@ -219,4 +191,3 @@ def delete_property(request):
     customer_property.is_active = False
     customer_property.save()
     return Response(success_response(None, "Property deleted"))
-
