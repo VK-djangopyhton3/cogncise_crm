@@ -26,24 +26,24 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
 
-    list_display = ('id', 'phone', 'is_active', 'is_verified', 'last_login')
+    list_display = ('id', 'phone', 'email', 'is_active', 'is_verified', 'last_login')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     search_fields = ('phone', 'email')
-    ordering = ('phone',)
+    ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions',)
 
 
 class UserRolesAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'company', 'role']
     list_filter = ['role']
-    search_fields = ['company__company_name', 'user__name']
+    search_fields = ['company__company_name',]
     ordering = ['id', ]
 
 
 class StaffAssociateAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'company']
     list_filter = ['company']
-    search_fields = ['company__company_name', 'user__name']
+    search_fields = ['company__company_name']
     ordering = ['id', ]
 
 

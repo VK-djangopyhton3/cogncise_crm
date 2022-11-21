@@ -12,8 +12,8 @@ from utils.options import USER_ROLES
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     # User info
-    email = models.EmailField(max_length=254, unique=True, null=False)
-    phone = models.CharField(max_length=254, unique=True, null=True)
+    email = models.CharField(max_length=254, unique=True, null=False)
+    phone = models.CharField(max_length=254, unique=True, null=False)
 
     # profile_pic     =   models.ImageField(upload_to='media/profile_pic',blank=True,null=True) # uncomment needed
 
@@ -26,13 +26,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    # EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['phone']
 
     objects = UserManager()
 
     def __str__(self):
-        return self.name + '(' + self.email + ')'
+        return self.email
 
 
 class UserRoles(models.Model):
@@ -41,7 +41,14 @@ class UserRoles(models.Model):
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
 
+    def __str__(self):
+        return self.name
+
 
 class StaffAssociate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
+
+
+    def __str__(self):
+        return self.user.email
