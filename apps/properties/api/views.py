@@ -219,3 +219,4 @@ def delete_property(request):
     customer_property.is_active = False
     customer_property.save()
     return Response(success_response(None, "Property deleted"))
+
