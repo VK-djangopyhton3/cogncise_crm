@@ -37,7 +37,7 @@ class CustomerViews(APIView):
         return Response(fail_response(serializer.errors, 'Customer could not be created', status.HTTP_400_BAD_REQUEST))
 
     def put(self, request):
-        customer = self.get_object(request.data['user_id'], request.data['company_id'])
+        customer = self.get_object(request.data['user_id'], request.data['company_id']) #if customer try updating own data
         if customer:
             serializer = CustomerInfoSerializer(customer, data=request.data, partial=True)
             if serializer.is_valid():
@@ -53,6 +53,6 @@ class CustomerListSearch(ListAPIView):
     permission_classes = [IsManager]
     queryset = CustomerInfo.objects.filter()
     filter_backends = [SearchFilter, DjangoFilterBackend]
-    filters = ['id', 'name', 'customer__phone', 'customer__email', 'company_name', 'company_ABN', 'lead_status']
+    filters = ['id', 'customer_name', 'type', 'company_name', 'company_ABN', 'lead_status']
     filterset_fields = filters
     search_fields = filters
