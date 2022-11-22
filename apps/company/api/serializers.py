@@ -6,7 +6,7 @@ class CompaniesSerializer(DynamicFieldsModelSerializer):
     
     class Meta:
         model = Companies
-        fields = ['company_name', 'company_address', 'ABN', 'created_on']
+        fields = ['id', 'company_name', 'company_address', 'ABN', 'created_on']
 
 
 class CompanyUpdateRequestSerializer(DynamicFieldsModelSerializer):
