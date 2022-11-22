@@ -2,12 +2,11 @@ from django.conf import settings
 from django.db import models
 
 
-
 # Create your models here.
 class Companies(models.Model):
-    company_name = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    company_name = models.CharField(max_length=255, unique=True)
     company_address = models.CharField(max_length=255)
-    ABN = models.CharField(max_length=255, null=True, unique=True)
+    ABN = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -23,7 +22,7 @@ class CompanyUpdateRequests(models.Model):
     company_address = models.CharField(max_length=255, null=True, blank=True)
     ABN = models.CharField(max_length=255, null=True, blank=True)
     # approval status
-    is_approved = models.BooleanField(default=None,null=True)
+    is_approved = models.BooleanField(default=None, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     remarks = models.TextField()
