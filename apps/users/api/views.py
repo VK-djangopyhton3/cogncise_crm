@@ -100,7 +100,7 @@ class UserSearchList(ListAPIView):
     message = "User list"
     filter_backends = [SearchFilter, DjangoFilterBackend]
     ordering = ['id', ]
-    filters = ['id', 'email', 'phone', 'company_role', 'company__company__company_name', 'company__company__ABN']
+    filters = ['id', 'email', 'phone']
     filterset_fields = filters
     search_fields = filters
 
