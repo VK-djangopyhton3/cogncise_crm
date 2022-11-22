@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from apps.customer.api.serializers import CustomerInfoSerializer
 from apps.customer.models import CustomerInfo
+from apps.users.api.serializers import UserSerializer
 from utils.permissions import IsManager, IsStaff
 from utils.responseformat import success_response, fail_response
 
@@ -26,6 +27,12 @@ class CustomerViews(APIView):
         return customer.first()
 
     def post(self, request):
+        # user_info = request.data['user_info']
+        # user = UserSerializer(data=user_info, many=False)
+        # if not user.is_valid():
+        #     return Response(user.errors, "User could not be created")
+        # user_id = user.save().data.id
+
         user = User.objects.get(id=request.data['user_id'])
         agency = request.user.userroles.company
         if request.data["type"] == "business":
@@ -37,7 +44,8 @@ class CustomerViews(APIView):
         return Response(fail_response(serializer.errors, 'Customer could not be created', status.HTTP_400_BAD_REQUEST))
 
     def put(self, request):
-        customer = self.get_object(request.data['user_id'], request.data['company_id']) #if customer try updating own data
+        customer = self.get_object(request.data['user_id'],
+                                   request.data['company_id'])  # if customer try updating own data
         if customer:
             serializer = CustomerInfoSerializer(customer, data=request.data, partial=True)
             if serializer.is_valid():
