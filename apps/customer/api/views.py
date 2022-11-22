@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -51,7 +52,7 @@ class CustomerListSearch(ListAPIView):
     serializer_class = CustomerInfoSerializer
     permission_classes = [IsManager]
     queryset = CustomerInfo.objects.filter()
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     filters = ['id', 'name', 'customer__phone', 'customer__email', 'company_name', 'company_ABN', 'lead_status']
     filterset_fields = filters
     search_fields = filters
