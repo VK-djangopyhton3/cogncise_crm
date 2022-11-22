@@ -9,5 +9,5 @@ class CustomerInfoSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = CustomerInfo
-        fields = ['id', 'customer', 'type', 'agency', 'customer_name', 'company_name', 'company_ABN', 'assigned_to', 'lead_status',
+        fields = ['id', 'customer', 'agency', 'customer_name', 'company_name', 'company_ABN', 'assigned_to', 'lead_status',
                   'is_active', 'sms_consent', 'updated_on']

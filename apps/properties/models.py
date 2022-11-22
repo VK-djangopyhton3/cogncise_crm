@@ -21,11 +21,13 @@ class StreetTypes(models.Model):
     def __str__(self):
         return self.type_name
 
-
+class BusinessDetails(models.Model):
+    pass
 class Property(models.Model):
     customer = models.ForeignKey(CustomerInfo, on_delete=models.CASCADE)
     property_type = models.ForeignKey(PropertyTypes, on_delete=models.CASCADE)
     building_name = models.CharField(max_length=255)
+    business_details = models.ForeignKey(BusinessDetails, on_delete=models.CASCADE)
     level_no = models.IntegerField(null=True, blank=True)
     unit_no = models.IntegerField(null=True, blank=True)
     lot_no = models.IntegerField(null=True, blank=True)
@@ -34,8 +36,10 @@ class Property(models.Model):
     suffix = models.CharField(max_length=255)
     suburb = models.CharField(max_length=255)
     postcode = models.CharField(max_length=255)
-    state = models.CharField(max_length=255, null=False, blank=False)
+    state = models.CharField(max_length=255)
+    lga = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
+    is_business = models.BooleanField(default=False)
     is_billing_address = models.BooleanField(default=False)
 
     def __str__(self):

@@ -10,7 +10,6 @@ from utils.options import *
 class CustomerInfo(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False, blank=False)
     agency = models.ForeignKey(Companies, on_delete=models.CASCADE,null=True)
-    type = models.CharField(max_length=30, choices=CUSTOMER_TYPE)
     customer_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255, null=True, blank=True)
     company_ABN = models.CharField(max_length=255, null=True, blank=True)

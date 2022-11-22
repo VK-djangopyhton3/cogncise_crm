@@ -130,7 +130,7 @@ class UserRolesViews(APIView):
         return Response(
             fail_response(serializer.errors, "User could not be assigned a role", status.HTTP_400_BAD_REQUEST))
 
-    def put(self):
+    def put(self, request):
         role = self.get_objects(self.request.data["user_id"])
         if not role:
             return Response(fail_response(None, "User does not exist", status.HTTP_404_NOT_FOUND))
