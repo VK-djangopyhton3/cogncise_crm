@@ -10,12 +10,12 @@ User = get_user_model()
 
 
 class UserSerializer(DynamicFieldsModelSerializer):
-    userroles = serializers.SerializerMethodField()
+    company = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone', 'password', 'userroles', 'customer', 'is_staff', 'is_active', 'is_verified']
+        fields = ['id', 'email', 'phone', 'password', 'company', 'customer', 'is_staff', 'is_active', 'is_verified']
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_company(self, obj):
