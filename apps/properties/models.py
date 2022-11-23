@@ -21,13 +21,11 @@ class StreetTypes(models.Model):
     def __str__(self):
         return self.type_name
 
-class BusinessDetails(models.Model):
-    pass
+
 class Property(models.Model):
     customer = models.ForeignKey(CustomerInfo, on_delete=models.CASCADE)
     property_type = models.ForeignKey(PropertyTypes, on_delete=models.CASCADE)
     building_name = models.CharField(max_length=255)
-    business_details = models.ForeignKey(BusinessDetails, on_delete=models.CASCADE)
     level_no = models.IntegerField(null=True, blank=True)
     unit_no = models.IntegerField(null=True, blank=True)
     lot_no = models.IntegerField(null=True, blank=True)

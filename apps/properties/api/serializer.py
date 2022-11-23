@@ -23,6 +23,4 @@ class PropertySerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Property
         fields = ['id', 'customer', 'property_type', 'level_no', 'unit_no', 'lot_no', 'street_name', 'street_type',
-                  'suffix', 'suburb',
-                  'postcode',
-                  'state', 'is_active']
+                  'suffix', 'suburb', 'postcode',  'state', 'is_active']
