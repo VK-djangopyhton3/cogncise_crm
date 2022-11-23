@@ -27,12 +27,6 @@ class CustomerViews(APIView):
         return customer.first()
 
     def post(self, request):
-        # user_info = request.data['user_info']
-        # user = UserSerializer(data=user_info, many=False)
-        # if not user.is_valid():
-        #     return Response(user.errors, "User could not be created")
-        # user_id = user.save().data.id
-
         user = User.objects.get(id=request.data['user_id'])
         agency = request.user.userroles.company
         if request.data["type"] == "business":
