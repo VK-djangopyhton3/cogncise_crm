@@ -23,3 +23,7 @@ LEAD_STATUS = (
     ("Acquired", "Acquired"),
     ("Lost", "Lost")
 )
+
+APPOINTMENT_STATUS =(
+
+)
