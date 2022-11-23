@@ -70,3 +70,8 @@ class IsViewOnly(BasePermission):
     def has_permission(self, request, view):
         if request.method in self.my_safe_method:
             return request.user.is_verified
+
+
+class IsCommon(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_staff
