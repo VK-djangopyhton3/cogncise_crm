@@ -38,16 +38,14 @@ class CustomerViews(APIView):
         return Response(fail_response(serializer.errors, 'Customer could not be created', status.HTTP_400_BAD_REQUEST))
 
     def put(self, request):
-        customer = self.get_object(request.data['user_id'],
-                                   request.data['company_id'])  # if customer try updating own data
+        customer = self.get_object(request.data['user_id'], request.data['company_id'])  # required even if customer try updating own data
         if customer:
             serializer = CustomerInfoSerializer(customer, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(success_response(serializer.data, "Customer details updated"))
-            return Response(
-                fail_response(serializer.errors, "customer info could not be updated", status.HTTP_400_BAD_REQUEST))
-        return fail_response(None, "No customer with this information")
+            return Response(fail_response(serializer.errors, "customer info could not be updated", status.HTTP_400_BAD_REQUEST))
+        return Response(fail_response(None, "No customer with this information"))
 
 
 class CustomerListSearch(ListAPIView):
