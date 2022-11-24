@@ -24,6 +24,10 @@ LEAD_STATUS = (
     ("Lost", "Lost")
 )
 
-APPOINTMENT_STATUS =(
+APPOINTMENT_STATUS = (
+
+)
+
+JOB_STATUS = (
 
 )
