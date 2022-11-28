@@ -109,7 +109,7 @@ class UserRolesViews(APIView):
     permission_classes = [IsAdmin | IsStaff]
 
     def get_objects(self, uid):
-        if not self.request.is_staff:
+        if not self.request.user.is_staff:
             company = self.request.user.userroles.company
         else:
             company = Companies.objects.get(id=self.request.data['company_id'])
