@@ -10,8 +10,8 @@ class Companies(models.Model):
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
-    def __int__(self):
-        return self.id
+    def __str__(self):
+        return self.company_name
 
 
 class CompanyUpdateRequests(models.Model):

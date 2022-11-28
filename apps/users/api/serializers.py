@@ -10,15 +10,16 @@ User = get_user_model()
 
 
 class UserSerializer(DynamicFieldsModelSerializer):
-    company = serializers.SerializerMethodField()
+    userroles = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone', 'password', 'company', 'customer', 'is_staff', 'is_active', 'is_verified']
+        # fields = "__all__"
+        fields = ['id', 'email', 'phone', 'password', 'userroles', 'customer', 'is_staff', 'is_active', 'is_verified']
         extra_kwargs = {'password': {'write_only': True}}
 
-    def get_company(self, obj):
+    def get_userroles(self, obj):
         user = UserRoles.objects.filter(user=obj)
         if not user.exists:
             return None
@@ -49,9 +50,11 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
 class UserRolesSerializer(DynamicFieldsModelSerializer):
     user = UserSerializer(many=False, read_only=True,
-                          fields=['id', 'email', 'phone', 'is_active', 'is_verified', 'is_staff'])
+                          # fields=['id', 'phone', 'is_active', 'is_verified', 'is_staff']
+                          )
     company = CompaniesSerializer(many=False, read_only=True)
 
     class Meta:
         model = UserRoles
-        fields = ['user', 'name', 'company', 'role']
+        # fields = "__all__"
+        fields = ['id', 'user', 'name', 'company', 'role']
