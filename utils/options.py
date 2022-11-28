@@ -29,5 +29,6 @@ APPOINTMENT_STATUS = (
 )
 
 JOB_STATUS = (
-
+    ("New Job", "New Job"),
+    ("Won", "Won")
 )

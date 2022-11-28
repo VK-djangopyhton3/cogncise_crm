@@ -49,5 +49,5 @@ class StaffAssociate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
-        return self.user.email
+    def __int__(self):
+        return self.id

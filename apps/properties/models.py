@@ -41,7 +41,7 @@ class Property(models.Model):
     is_billing_address = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.customer.customer.name
+        return self.customer.customer_name
 
     class Meta:
         constraints = [

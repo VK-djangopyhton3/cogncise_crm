@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.appointments',
     'apps.customer',
     'apps.properties',
+    'apps.jobs',
 
     # 3rd party
     'rest_framework_simplejwt.token_blacklist',
