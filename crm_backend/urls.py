@@ -13,44 +13,50 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import include, path
 from django.contrib import admin
-from django.urls import path, include, re_path
-from rest_framework_swagger.views import get_swagger_view
-from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView
+from django.conf import settings
+from django.conf.urls.static import static
 
-from utils.tokenclaims import MyTokenObtainPairView
-
-# drf_yasg code starts here
-from rest_framework import permissions
+# Swagger imports
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="CRM API",
-        default_version='v1',
-        description="",
+      title="CognCise API",
+      default_version='v1',
+      description="CognCise Api's documentation",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email=""),
+      license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=[permissions.AllowAny],
+    permission_classes=(permissions.IsAuthenticated,),
 )
 
+
 urlpatterns = [
-    re_path(r'^doc(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('doc/', schema_view.with_ui('swagger', cache_timeout=0),
-         name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
-         name='schema-redoc'),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
-    path('api/users/', include('apps.users.api.urls')),
-    path('api/company/', include('apps.company.api.urls')),
-    path('api/customer/', include('apps.customer.api.urls')),
-    path('api/properties/', include('apps.properties.api.urls')),
-    path('api/jobs/', include('apps.jobs.api.urls')),
-    path('api/appointments/', include('apps.appointments.api.urls'))
 ]
+
+api_urls = [
+    path(
+        "api/v1/",
+        include(
+            [
+                path('core/', include('core.urls.api_urls', namespace='core')),
+                path('leads/', include('lead.urls.api_urls', namespace='lead')),
+            ]
+        )
+    ),
+
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+]
+
+
+urlpatterns += api_urls
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

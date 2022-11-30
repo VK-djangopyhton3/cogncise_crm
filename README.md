@@ -1,11 +1,44 @@
-# Backend
+# Cogncise CRM Backend
 
-# Installation
-1. Rename the sample.env file to .env.
-2. Add the parameter values.
-3. Create your Postgres database and the Postgres user.
-4. Create a virtual environment.
-4. Run "python manage.py migrate".
-5. Create a super user "python manage.py createsuperuser"
-6. Run "pip install -r requirements.txt"
-6. Run "python manage.py runserver" 
+## Clone the project
+### Clone the project from Github:
+
+    Project Root Directory: `/var/www` Or any
+    
+    git clone remote url
+
+## Create Environment file
+
+    Go to the settings folder then create settings.ini or .env file
+
+    Note : Like see the example.ini file in project root folder, same veriable copy and paste in settings.ini file on settings folder then update env varible .
+
+## Virtual Environment Setup
+### Create Virtualenv Folder
+
+    virtualenv --python=python3.10 Project_dir/.venv
+
+### Backend python code
+
+### Activate Environment:
+
+    source project_venv/bin/activate
+
+## Install dependencies:
+
+    pip install -r requirements.txt
+
+
+## Apply database migrations
+    
+    python3 manage.py makemigrations 
+    python3 manage.py migrate
+
+## Create super user
+    
+    python3 manage.py createsuperuser
+
+## Load base data
+
+Load fixtures:
+
