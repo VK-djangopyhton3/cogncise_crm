@@ -38,7 +38,13 @@
     
     python3 manage.py createsuperuser
 
-## Load base data
+## Load & Dump base data
+
+Dump Fixtures:
+    
+    ./manage.py dumpdata core.role > crm_backend/fixtures/core/role.json
 
 Load fixtures:
 
+    #python3 manage.py loaddata crm_backend/fixtures/core/group.json
+    python3 manage.py loaddata crm_backend/fixtures/offer_manager/role.json
