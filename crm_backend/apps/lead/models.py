@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from common.common_model_imports import *
 from common.app_utils import profile_unique_upload
 
-from core.abstract_models import BaseModel, BasicInformation, Address
+from core.abstract_models import BaseModel, BasicInformation
 
 User = get_user_model()
 
@@ -33,7 +33,7 @@ class Lead(BasicInformation):
         return f"{self.first_name} {self.lead_source}"
 
 
-class LeadAddress(Address):
+class LeadAddress(models.Model):
     # Lead Address
     lead = models.ForeignKey(Lead, related_name="lead_address", null=True, blank=True, on_delete=models.CASCADE)
 

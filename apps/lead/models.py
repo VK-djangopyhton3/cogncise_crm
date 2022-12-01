@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from core.models import BaseModel, User, BasicInformation, Address
+from core.models import BaseModel, User, BasicInformation
 from common.app_utils import profile_unique_upload
 
 class LeadStatus(BaseModel):
@@ -22,6 +22,6 @@ class Lead(BasicInformation):
     lead_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="lead_owner", null=True, blank=True)
 
     
-class LeadAddress(Address):
+class LeadAddress(models.Model):
     # Lead Address
     lead = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name="lead_address", null=True, blank=True)

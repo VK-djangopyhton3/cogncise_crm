@@ -1,11 +1,9 @@
 from django.db import models
-
 from apps.company.models import Companies
 from apps.customer.models import CustomerInfo
 from apps.properties.models import Property
 from apps.users.models import UserRoles
 from utils.options import LEAD_STATUS, JOB_STATUS
-
 
 # Create your models here.
 
@@ -27,3 +25,9 @@ class Jobs(models.Model):
 
     def __str__(self):
         return self.customer.customer_name
+
+
+
+
+
+    

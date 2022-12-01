@@ -1,34 +1,23 @@
 from common.common_view_imports import *
+from job.models import Job
+from job. serializers import JobSerializer
+
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
-    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
-    pagination_class = pagination_settings.DEFAULT_PAGINATION_CLASS
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny(),]        
-        return super(JobViewSet, self).get_permissions()
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(user = self.request.user)
-        return self.queryset
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return self.serializer_class
-        return self.serializer_class
 
     def create(self, request):
 
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-                  
+            serializer.save()
 
             # logger.info(data)
-            return return_response(data, True, 'Successfully Created!', status.HTTP_200_OK)
+            return return_response(serializer.data, True, 'Successfully Created!', status.HTTP_200_OK)
 
         # logger.error(serializer.errors)
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
