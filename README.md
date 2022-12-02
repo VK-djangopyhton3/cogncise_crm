@@ -47,4 +47,4 @@ Dump Fixtures:
 Load fixtures:
 
     #python3 manage.py loaddata crm_backend/fixtures/core/group.json
-    python3 manage.py loaddata crm_backend/fixtures/offer_manager/role.json
+    python3 manage.py loaddata crm_backend/fixtures/core/role.json

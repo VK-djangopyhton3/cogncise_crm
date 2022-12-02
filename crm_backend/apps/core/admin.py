@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as StockGroup
 from django.utils.translation import gettext_lazy as _
 
-from core.models import User, Group, Role
+from core.models import User, Group, Role, Address
 from core.settings import CUSER_SETTINGS
 
 
@@ -43,3 +43,4 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'slug']
 
 admin.site.register(Role, RoleAdmin)
+admin.site.register(Address)
