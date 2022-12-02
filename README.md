@@ -45,6 +45,13 @@ Dump Fixtures:
     ./manage.py dumpdata core.role > crm_backend/fixtures/core/role.json
 
 Load fixtures:
+```bash
+# roles
+python3 manage.py loaddata crm_backend/fixtures/core/role.json
 
-    #python3 manage.py loaddata crm_backend/fixtures/core/group.json
-    python3 manage.py loaddata crm_backend/fixtures/core/role.json
+# lead statuses
+python3 manage.py loaddata crm_backend/fixtures/lead/leadstatus.json
+
+# lead sources
+python3 manage.py loaddata crm_backend/fixtures/lead/leadsource.json
+```

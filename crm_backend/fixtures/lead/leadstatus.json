@@ -1,0 +1,52 @@
+[
+  {
+    "model": "lead.leadstatus",
+    "pk": 1,
+    "fields": {
+      "created_at": "2022-12-02T13:36:25.056Z",
+      "updated_at": "2022-12-02T13:36:25.056Z",
+      "is_deleted": false,
+      "title": "New"
+    }
+  },
+  {
+    "model": "lead.leadstatus",
+    "pk": 2,
+    "fields": {
+      "created_at": "2022-12-02T13:36:29.632Z",
+      "updated_at": "2022-12-02T13:36:29.632Z",
+      "is_deleted": false,
+      "title": "Won"
+    }
+  },
+  {
+    "model": "lead.leadstatus",
+    "pk": 3,
+    "fields": {
+      "created_at": "2022-12-02T13:36:36.431Z",
+      "updated_at": "2022-12-02T13:36:36.431Z",
+      "is_deleted": false,
+      "title": "Lost"
+    }
+  },
+  {
+    "model": "lead.leadstatus",
+    "pk": 4,
+    "fields": {
+      "created_at": "2022-12-02T13:36:50.462Z",
+      "updated_at": "2022-12-02T13:36:50.462Z",
+      "is_deleted": false,
+      "title": "Contacted"
+    }
+  },
+  {
+    "model": "lead.leadstatus",
+    "pk": 5,
+    "fields": {
+      "created_at": "2022-12-02T13:36:58.885Z",
+      "updated_at": "2022-12-02T13:36:58.885Z",
+      "is_deleted": false,
+      "title": "Completed"
+    }
+  }
+]

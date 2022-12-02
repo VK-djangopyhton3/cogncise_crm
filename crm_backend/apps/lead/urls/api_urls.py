@@ -7,5 +7,7 @@ router = routers.DefaultRouter()
 router.register(r'', LeadViewSet, basename='lead')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('sources/', LeadSourceListAPIView.as_view(), name='status'),
+    path('statuses/', LeadStatusListAPIView.as_view(), name='statuses'),
+    path('', include(router.urls))
 ]
