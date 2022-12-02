@@ -3,8 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
 
+from shared.models import Address
 from core.abstract_models import BasicInformation
-from core.models import Address
 
 class Job(BasicInformation):
     title = models.CharField( _("title"), max_length=100)

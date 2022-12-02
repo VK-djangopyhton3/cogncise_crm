@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # Local apps,
     'core',
+    'shared',
     'lead',
     'job',
 

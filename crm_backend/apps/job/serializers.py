@@ -1,6 +1,6 @@
 from common.common_serilizer_imports import *
 
-from core.serializers import AddressSerializer
+from shared.serializers import AddressSerializer
 from job.models import Job
 
 # Job Serializer

@@ -1,8 +1,5 @@
 from common.common_serilizer_imports import *
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
-
-from core.models import Address
 
 User = get_user_model()
 
@@ -66,13 +63,3 @@ class CheckUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "username"]
-
-
-# Address Serializer
-class AddressSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
-
-    class Meta:
-        model = Address
-        exclude = ['created_at', 'updated_at', 'object_id', 'content_type']
-        read_only_fields = ['content_object']
