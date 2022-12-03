@@ -37,15 +37,10 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    role_name = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login"]
         read_only_fields = ["id", "username", "email", "role_name", "last_login"]
-
-    def get_role_name(self, obj):
-        return obj.role.get_role_name()
 
 
 class ShowUserSerializer(serializers.ModelSerializer):
@@ -56,16 +51,11 @@ class ShowUserSerializer(serializers.ModelSerializer):
 
     # mobile_number = PhoneNumberField(region="IN")
 
-    role_name = serializers.SerializerMethodField()
-
     class Meta:
         """Passing model metadata"""
         model = User
         fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token"]
         read_only_fields = ["id", "username", "email", "auth_token"]
-
-    def get_role_name(self, obj):
-        return obj.role.get_role_name()
 
 
 class CheckUserSerializer(serializers.ModelSerializer):
@@ -78,12 +68,6 @@ class CheckUserSerializer(serializers.ModelSerializer):
 
 
 class RoleSerializer(serializers.ModelSerializer):
-    role_name = serializers.SerializerMethodField()
-
     class Meta:
         model = Role
         fields = ["id", "name", "slug", "role_name"]
-
-    def get_role_name(self, obj):
-
-        return obj.get_role_name()

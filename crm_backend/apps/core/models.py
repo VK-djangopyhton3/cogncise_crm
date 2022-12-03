@@ -31,8 +31,9 @@ class Role(BaseModel):
     def company_admin(cls):
         return cls.objects.filter(slug='CompanyAdmin').last()
 
-    def get_role_name(self):
-        return f"{self.get_category_display()} {self.name}"
+    @property
+    def role_name(self):
+        return self.__str__()
 
     def save(self, *args, **kwargs):
         super(Role, self).save(*args, **kwargs)
@@ -156,6 +157,10 @@ class User(AbstractCUser, BaseModel):
 
     def __str__(self):
         return self.username
+
+    @property
+    def role_name(self):
+        return self.role and self.role.role_name
     
     @classmethod
     def create_company_admin(cls, **kwargs):
