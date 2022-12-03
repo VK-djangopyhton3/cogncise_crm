@@ -46,9 +46,10 @@ api_urls = [
         "api/v1/",
         include(
             [
-                path('core/', include('core.urls.api_urls', namespace='core')),
-                path('leads/', include('lead.urls.api_urls', namespace='lead')),
-                path('jobs/', include('job.urls.api_urls', namespace='job')),
+                path('core/',      include('core.urls.api_urls',    namespace='core')),
+                path('companies/', include('company.urls.api_urls', namespace='company')),
+                path('leads/',     include('lead.urls.api_urls',    namespace='lead')),
+                path('jobs/',      include('job.urls.api_urls',     namespace='job')),
             ]
 
         )

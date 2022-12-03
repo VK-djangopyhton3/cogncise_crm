@@ -27,15 +27,19 @@ class Role(BaseModel):
         verbose_name = _('role')
         verbose_name_plural = _('roles')
 
+    @classmethod
+    def company_admin(cls):
+        return cls.objects.filter(slug='CompanyAdmin').last()
+
     def save(self, *args, **kwargs):
         super(Role, self).save(*args, **kwargs)
         if not self.slug:
 
-            self.slug = f'{self.get_category_display().capitalize()}{self.name.capitalize()}'
+            self.slug = f'{self.get_category_display().capitalize()}{self.name.capitalize()}'  # type: ignore
             self.save()
 
     def __str__(self):
-        return f"{self.get_category_display()} {self.name}"
+        return f"{self.get_category_display()} {self.name}"  # type: ignore
 
     
 class AbstractCUser(AbstractBaseUser, PermissionsMixin):
@@ -101,16 +105,16 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-        is_organization = self.is_organization
-        is_cogncise = self.is_cogncise
-        is_customer = self.is_customer
+        is_company = self.is_company    # type: ignore
+        is_cogncise = self.is_cogncise  # type: ignore
+        is_customer = self.is_customer  # type: ignore
         
         if not self.is_superuser:
-            if (is_organization and is_customer):
+            if (is_company and is_customer):
                 raise ValidationError(_("Not acceptable multiple types of user selection, needs to single selection."))
             
-            if (not is_organization and not is_customer and not is_cogncise):
-                raise ValidationError(_("Either is_organization, is_cogncise or is_customer must be checked."))
+            if (not is_company and not is_customer and not is_cogncise):
+                raise ValidationError(_("Either is_company, is_cogncise or is_customer must be checked."))
 
     def get_full_name(self):
         """
@@ -138,7 +142,7 @@ class User(AbstractCUser, BaseModel):
     role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role', null=True)
     mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
 
-    is_organization = models.BooleanField(_('Company User'), default=False, help_text=_('Designates whether this user should be treated as organization user. '), )
+    is_company = models.BooleanField(_('Company User'), default=False, help_text=_('Designates whether this user should be treated as company user. '), )
     is_customer = models.BooleanField(_('Customer User'), default=False, help_text=_('Designates whether this user should be treated as customer user. '), )
     is_cogncise = models.BooleanField(_('Cogncise User'), default=False, help_text=_('Designates whether this user should be treated as cogncise staff user. '), )
 
@@ -149,6 +153,14 @@ class User(AbstractCUser, BaseModel):
 
     def __str__(self):
         return self.username
+    
+    @classmethod
+    def create_company_admin(cls, **kwargs):
+        user = cls.objects.filter(email = kwargs['email']).last()
+        if user is not None: return user
+
+        kwargs.update({ 'role': Role.company_admin(), 'is_company': True, 'username': kwargs['email'] })
+        return cls.objects.create(**kwargs)
 
 
 class Group(BaseGroup):
