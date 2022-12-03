@@ -33,6 +33,9 @@ def custom_exception_handler(exc, context):
 
 
 class CustomPagination(PageNumberPagination):
+
+    page_size_query_param = "page_size"
+    
     def get_paginated_response(self, data):
         data = {
             'next': self.get_next_link(),

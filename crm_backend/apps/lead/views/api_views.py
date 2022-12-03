@@ -28,6 +28,7 @@ class LeadViewSet(viewsets.ModelViewSet):
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = ['company', 'source', 'status', 'owner', 'customer']
     ordering_fields = '__all__'
+
     
     def create(self, request, *args, **kwargs):
         request.data['owner'] = request.user.id
