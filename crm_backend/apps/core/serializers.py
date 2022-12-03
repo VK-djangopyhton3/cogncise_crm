@@ -21,9 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'role', 'email', 'first_name', 'last_name', 'mobile_number', 'password']
+        fields = ["username", "role", "email", "first_name", "last_name", "mobile_number", "password"]
 
-        extra_kwargs = {'role': {'required': True}} 
+        extra_kwargs = {"role": {"required": True}} 
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -36,13 +36,21 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ["username", "password"]
 
 
-class ShowUserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
+    role_name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["id", "username", "email", "first_name", "last_name", "role", "auth_token", "profile_pic"]
-        read_only_fields = ["id", "username", "email", "auth_token"]
+        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login"]
+        read_only_fields = ["id", "username", "email", "role_name", "last_login"]
+    
 
-class UserProfileSerializer(serializers.ModelSerializer):
+    def get_role_name(self, obj):
+
+        return f"{obj.get_category_display()} {obj.name}"
+
+
+class ShowUserSerializer(serializers.ModelSerializer):
     """
     UserShowSerializer is a model serializer which shows the attributes
     of a user.
@@ -50,11 +58,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     # mobile_number = PhoneNumberField(region="IN")
 
+    role_name = serializers.SerializerMethodField()
+
     class Meta:
         """Passing model metadata"""
         model = User
-        fields = ["id", "username", "email", "first_name", "last_name", "role", "auth_token", "profile_pic"]
+        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token"]
         read_only_fields = ["id", "username", "email", "auth_token"]
+
+    def get_role_name(self, obj):
+
+        return f"{obj.get_category_display()} {obj.name}"
+
 
 
 
@@ -69,6 +84,7 @@ class CheckUserSerializer(serializers.ModelSerializer):
 
 class RoleSerializer(serializers.ModelSerializer):
     role_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Role
         fields = ["id", "name", "slug", "role_name"]

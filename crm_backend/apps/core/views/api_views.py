@@ -35,7 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return self.serializer_class
-        return ShowUserSerializer
+        return UserProfileSerializer
 
     def list(self, request):
         page = self.paginate_queryset(self.get_queryset())
