@@ -43,11 +43,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login"]
         read_only_fields = ["id", "username", "email", "role_name", "last_login"]
-    
 
     def get_role_name(self, obj):
-
-        return f"{obj.get_category_display()} {obj.name}"
+        return obj.role.get_role_name()
 
 
 class ShowUserSerializer(serializers.ModelSerializer):
@@ -67,10 +65,7 @@ class ShowUserSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "username", "email", "auth_token"]
 
     def get_role_name(self, obj):
-
-        return f"{obj.get_category_display()} {obj.name}"
-
-
+        return obj.role.get_role_name()
 
 
 class CheckUserSerializer(serializers.ModelSerializer):
@@ -91,4 +86,4 @@ class RoleSerializer(serializers.ModelSerializer):
 
     def get_role_name(self, obj):
 
-        return f"{obj.get_category_display()} {obj.name}"
+        return obj.get_role_name()

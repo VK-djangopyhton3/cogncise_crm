@@ -31,6 +31,9 @@ class Role(BaseModel):
     def company_admin(cls):
         return cls.objects.filter(slug='CompanyAdmin').last()
 
+    def get_role_name(self):
+        return f"{self.get_category_display()} {self.name}"
+
     def save(self, *args, **kwargs):
         super(Role, self).save(*args, **kwargs)
         if not self.slug:
