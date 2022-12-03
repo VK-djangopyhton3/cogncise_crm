@@ -2,7 +2,7 @@ from common.common_view_imports import *
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework.decorators import action
+
 
 from core.serializers import *
 from core import utils

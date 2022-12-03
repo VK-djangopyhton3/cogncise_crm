@@ -68,7 +68,11 @@ class CheckUserSerializer(serializers.ModelSerializer):
 
 
 class RoleSerializer(serializers.ModelSerializer):
-
+    role_name = serializers.SerializerMethodField()
     class Meta:
         model = Role
-        fields = ["id", "name", "slug"]
+        fields = ["id", "name", "slug", "role_name"]
+
+    def get_role_name(self, obj):
+
+        return f"{obj.get_category_display()} {obj.name}"
