@@ -1,3 +1,5 @@
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from common.common_view_imports import *
 
 from lead.models import LeadSource, LeadStatus, Lead
@@ -22,7 +24,10 @@ class LeadViewSet(viewsets.ModelViewSet):
     serializer_class = LeadSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
-
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
+    filterset_fields = ['company', 'source', 'status', 'owner', 'customer']
+    
     def create(self, request, *args, **kwargs):
         request.data['owner'] = request.user.id
         serializer = self.get_serializer(data=request.data)
