@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return super(UserViewSet, self).get_permissions()
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter()
+        self.queryset = self.queryset.filter(is_superuser=False, is_deleted=False).exclude(id=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -37,16 +37,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return self.serializer_class
         return UserProfileSerializer
 
-    def list(self, request):
-        page = self.paginate_queryset(self.get_queryset())
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-
-        # logger.info(serializer.data)
-        return return_response(serializer.data, True, 'List Successfully Retrieved!', status.HTTP_200_OK)
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -61,35 +51,41 @@ class UserViewSet(viewsets.ModelViewSet):
             
         except Exception as e:
             return return_response(str(e), False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
 
-    def retrieve(self, request, pk=None):
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return return_response(serializer.data, True, 'User List Successfully Retrieved!', status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        
-        # logger.info(serializer.data)
-        return return_response(serializer.data, True, ' Successfully Retrieved!', status.HTTP_200_OK)
 
-    def update(self, request, pk=None):
+        return return_response(serializer.data, True, 'User Successfully Retrieved!', status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         if serializer.is_valid():
-            serializer.update(instance,validated_data=serializer.validated_data)
-            
-            # logger.info(serializer.data)
-            return return_response(serializer.data, True, ' Successfully Updated!', status.HTTP_200_OK)
+            self.perform_update(serializer)
+            return return_response(serializer.data, True, 'User Successfully Updated!', status.HTTP_200_OK)
 
-        # logger.error(serializer.errors)
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
 
-    def partial_update(self, request, pk=None):
-        pass
-
-    def destroy(self, request, pk=None):
+    def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.perform_destroy(instance)
+        instance.is_deleted = True
+        instance.save()
+        # self.perform_destroy(instance)
+        return return_response({'detail': 'object deleted'}, True, 'User Successfully Deleted!', status.HTTP_200_OK)
 
-        # logger.info('Successfully Deleted!')
-        return return_response({"detail":"object deleted"}, True, ' Successfully Deleted!', status.HTTP_200_OK)
 
 
 class LoginAPIView(generics.GenericAPIView):
