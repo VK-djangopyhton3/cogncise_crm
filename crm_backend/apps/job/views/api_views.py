@@ -10,9 +10,10 @@ class JobViewSet(viewsets.ModelViewSet):
     serializer_class = JobSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['title', 'first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = ['company']
+    ordering_fields = '__all__'
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
