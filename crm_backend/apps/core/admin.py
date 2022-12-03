@@ -14,13 +14,13 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'role', 'email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'is_organization', 'is_customer', 'is_cogncise')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'is_company', 'is_customer', 'is_cogncise')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'role', 'email', 'password1', 'password2', 'is_organization', 'is_customer', 'is_cogncise' ),
+            'fields': ('username', 'role', 'email', 'password1', 'password2', 'is_company', 'is_customer', 'is_cogncise' ),
         }),
     )
     # form = UserChangeForm
