@@ -4,9 +4,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.decorators import action
 
-from core.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, CheckUserSerializer, ShowUserSerializer
+from core.serializers import *
 from core import utils
-
+from core.models import Role
 User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -47,7 +47,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # logger.info(serializer.data)
         return return_response(serializer.data, True, 'List Successfully Retrieved!', status.HTTP_200_OK)
-
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -237,3 +236,8 @@ class RetrieveUpdateProfileAPIView(generics.RetrieveUpdateAPIView):
             serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST
         )
 
+class RoleListView(generics.ListAPIView):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]

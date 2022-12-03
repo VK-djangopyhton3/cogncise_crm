@@ -1,6 +1,8 @@
 from common.common_serilizer_imports import *
 from django.contrib.auth import get_user_model
 
+from core.models import Role
+
 User = get_user_model()
 
 
@@ -63,3 +65,10 @@ class CheckUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "username"]
+
+
+class RoleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Role
+        fields = ["id", "name", "slug"]

@@ -10,5 +10,6 @@ urlpatterns = [
     path('auth/', include(router.urls)),
     path('auth/login/', LoginAPIView.as_view(), name='auth_login'),
     path('auth/logout/', LogoutAPIView.as_view(), name='auth_logout'),
+    path('auth/roles/', RoleListView.as_view(), name='roles'),
     # path('auth/profile/', RetrieveUpdateProfileAPIView.as_view(), name='auth_profile'),
 ]
