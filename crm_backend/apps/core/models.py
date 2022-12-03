@@ -21,11 +21,13 @@ class Role(BaseModel):
 
     category = models.PositiveSmallIntegerField(_('role category'), choices=CATEGORY_CHOICES, default=1)
     name = models.CharField(_('name'), max_length=50)
-    slug  = models.SlugField(max_length=50, unique=True, null=True, blank=True, editable=False)
+    slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
 
     class Meta:
         verbose_name = _('role')
         verbose_name_plural = _('roles')
+
+        unique_together = ['name' , 'category']
 
     @classmethod
     def company_admin(cls):
