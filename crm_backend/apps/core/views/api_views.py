@@ -92,7 +92,7 @@ class UsersBulkDeleteAPIView(generics.GenericAPIView):
     """
     User bulk delete Operation View
 
-    User can perform CRUD operation to the system.
+    User can perform Bulk delete operation to the system.
     The data required are ids = [1,2,3].
     """
 
