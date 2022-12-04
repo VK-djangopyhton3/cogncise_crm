@@ -1,5 +1,7 @@
 from common.common_serilizer_imports import *
 from django.contrib.auth import get_user_model
+from rest_flex_fields import FlexFieldsModelSerializer
+
 from shared.serializers import AddressSerializer
 from lead.models import LeadSource, LeadStatus, Lead
 from company.serializers import OwnerSerializer
@@ -39,9 +41,10 @@ class LeadSourceSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 
-class LeadStatusSerializer(serializers.ModelSerializer):
-    leads = LeadSerializer(many=True, read_only=True, source='lead_status')
-
+class LeadStatusSerializer(FlexFieldsModelSerializer):
     class Meta:
         model   = LeadStatus
         exclude = ['created_at', 'updated_at']
+        expandable_fields = {
+          'leads': (LeadSerializer, {'many': True, 'read_only': True, 'source': 'lead_status'})
+        }

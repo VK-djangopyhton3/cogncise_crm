@@ -24,7 +24,7 @@ class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
     serializer_class = LeadSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = ['company', 'source', 'status', 'owner', 'customer']

@@ -9,3 +9,4 @@ python-decouple
 drf-yasg[validation]
 django-phonenumber-field[phonenumbers]
 Pillow
+drf-flex-fields
