@@ -122,7 +122,6 @@ DATABASES = {
 
 # Custom user settings
 AUTH_USER_MODEL = 'core.User'
-AUTH_GROUP_MODEL = 'core.Group'
 
 CUSER = {
     'app_verbose_name': 'Authentication and Authorization',

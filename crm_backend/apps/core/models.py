@@ -13,40 +13,40 @@ from common.app_utils import profile_unique_upload
 from core.managers import UserManager as CustomeUserManager
 from core.abstract_models import BaseModel
 
-class Role(BaseModel):
+# class Role(BaseModel):
       
-    CATEGORY_CHOICES = (
-      (1, 'Cogncise'),
-      (2, 'Company'),    
-    )
+#     CATEGORY_CHOICES = (
+#       (1, 'Cogncise'),
+#       (2, 'Company'),    
+#     )
 
-    category = models.PositiveSmallIntegerField(_('role category'), choices=CATEGORY_CHOICES, default=1)
-    name = models.CharField(_('name'), max_length=50)
-    slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
+#     category = models.PositiveSmallIntegerField(_('role category'), choices=CATEGORY_CHOICES, default=1)
+#     name = models.CharField(_('name'), max_length=50)
+#     slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
 
-    class Meta:
-        verbose_name = _('role')
-        verbose_name_plural = _('roles')
+#     class Meta:
+#         verbose_name = _('role')
+#         verbose_name_plural = _('roles')
 
-        unique_together = ['name' , 'category']
+#         unique_together = ['name' , 'category']
 
-    @classmethod
-    def company_admin(cls):
-        return cls.objects.filter(slug='CompanyAdmin').last()
+#     @classmethod
+#     def company_admin(cls):
+#         return cls.objects.filter(slug='CompanyAdmin').last()
 
-    @property
-    def role_name(self):
-        return self.__str__()
+#     @property
+#     def role_name(self):
+#         return self.__str__()
 
-    def save(self, *args, **kwargs):
-        super(Role, self).save(*args, **kwargs)
-        if not self.slug:
+#     def save(self, *args, **kwargs):
+#         super(Role, self).save(*args, **kwargs)
+#         if not self.slug:
 
-            self.slug = f'{self.get_category_display().capitalize()}{self.name.capitalize()}'  # type: ignore
-            self.save()
+#             self.slug = f'{self.get_category_display().capitalize()}{self.name.capitalize()}'  # type: ignore
+#             self.save()
 
-    def __str__(self):
-        return f"{self.get_category_display()} {self.name}"  # type: ignore
+#     def __str__(self):
+#         return f"{self.get_category_display()} {self.name}"  # type: ignore
 
     
 class AbstractCUser(AbstractBaseUser, PermissionsMixin):
@@ -146,7 +146,6 @@ class User(AbstractCUser, BaseModel):
     Password and email are required. Other fields are optional.
     """
     created_by = models.ForeignKey('self', on_delete=models.CASCADE, related_name='user_created_by', null=True, blank=True)
-    # role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role', null=True)
     mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
 
     is_company = models.BooleanField(_('Company User'), default=False, help_text=_('Designates whether this user should be treated as company user. '), )
@@ -163,11 +162,11 @@ class User(AbstractCUser, BaseModel):
 
     @property
     def role(self):
-        return self.groups.last()
+        return self.groups.last() and self.groups.last().id
 
     @property
     def role_name(self):
-        return self.groups.last() and self.groups.last().role_name
+        return self.groups.last() and self.groups.last().name
     
     @classmethod
     def create_company_admin(cls, **kwargs):
@@ -177,31 +176,15 @@ class User(AbstractCUser, BaseModel):
         kwargs.update({ 'groups': Group.company_admin(), 'is_company': True, 'username': kwargs['email'] })
         return cls.objects.create(**kwargs)
 
-    # @classmethod
-    # def create_custom_user(cls, **kwargs):
-    #     user = cls.objects.filter(email = kwargs['email']).last()
-    #     if user is not None: return user
 
-    #     username = kwargs['email']
-    #     if 'username' in kwargs:
-    #         username = kwargs['username']
-
-    #     kwargs.update({'username': username })
-    #     user = cls.objects.create(**kwargs)
-    #     import pdb; pdb.set_trace()
-    #     user.groups.set(Group.get_user_group(kwargs['role']), clear=True)
-    #     return user
-
-
+BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
+BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
 class Group(BaseGroup):
-
-    slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
-    description = models.CharField(max_length=254, null=True, blank=True)
 
     class Meta:
         verbose_name = _('group')
-        verbose_name_plural = _('roles')
-        app_label = 'auth'
+        verbose_name_plural = _('groups')
+        proxy = True
 
 
     @classmethod
@@ -209,19 +192,18 @@ class Group(BaseGroup):
         return cls.objects.filter(slug='company_admin').last()
 
     @classmethod
-    def get_user_group(cls, group_id):
+    def get_group_obj(cls, group_id):
         return cls.objects.filter(id=group_id).last()
 
     @property
     def role_name(self):
         return self.__str__()
 
-    def save(self, *args, **kwargs):
-        super(Group, self).save(*args, **kwargs)
-        if not self.slug:
-
-            self.slug = slugify(self.name)  # type: ignore
-            self.save()
+    # def save(self, *args, **kwargs):
+    #     super(Group, self).save(*args, **kwargs)
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)  # type: ignore
+    #         self.save()
 
     def __str__(self):
         return self.name

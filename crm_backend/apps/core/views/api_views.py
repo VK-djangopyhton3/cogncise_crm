@@ -2,11 +2,11 @@ from common.common_view_imports import *
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.contrib.auth import get_user_model, authenticate
-
+from django.contrib.auth.models import Group
 
 from core.serializers import *
 from core import utils
-from core.models import Role
+
 User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -229,7 +229,7 @@ class RetrieveUpdateProfileAPIView(generics.RetrieveUpdateAPIView):
         )
 
 class RoleListView(generics.ListAPIView):
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]

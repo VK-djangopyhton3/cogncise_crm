@@ -36,7 +36,7 @@ if CUSER_SETTINGS['register_proxy_auth_group_model']:
 
     @admin.register(Group)
     class GroupAdmin(BaseGroupAdmin):
-        pass
+        list_display = ['name', 'slug']
 
 
 # class RoleAdmin(admin.ModelAdmin):

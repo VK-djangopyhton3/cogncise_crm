@@ -30,11 +30,10 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password')
         role = validated_data.pop('role')
-        group = Group.get_user_group(role)
-        import pdb; pdb.set_trace()
+        # group = Group.get_group_obj(role)
         user = User.objects.create(**validated_data)
         user.set_password(password)
-
+        user.groups.add(role)
         user.save()
         return user
 
@@ -80,7 +79,7 @@ class CheckUserSerializer(serializers.ModelSerializer):
         fields = ["email", "username"]
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ["id", "name", "slug", "role_name"]
