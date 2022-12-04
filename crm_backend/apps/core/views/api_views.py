@@ -3,11 +3,11 @@ from rest_framework import filters
 from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model, authenticate
-
+from django.contrib.auth.models import Group
 
 from core.serializers import *
 from core import utils
-from core.models import Role
+
 User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,18 +44,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request):
-        serializer = self.serializer_class(data=request.data)
-        try:
-            if serializer.is_valid(raise_exception=True):
-                user = serializer.save()
-                user.set_password(serializer.validated_data['password'])
-                user.save()
-                return return_response(serializer.data, True, 'User created Successfully!', status.HTTP_201_CREATED)
 
-            return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
-            
-        except Exception as e:
-            return return_response(str(e), False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return return_response(serializer.data, True, 'User Successfully Created!', status.HTTP_200_OK)
+        
+        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+        
     
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -238,7 +234,7 @@ class RetrieveUpdateProfileAPIView(generics.RetrieveUpdateAPIView):
         )
 
 class RoleListView(generics.ListAPIView):
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]

@@ -42,12 +42,12 @@
 
 Dump Fixtures:
     
-    ./manage.py dumpdata core.role > crm_backend/fixtures/core/role.json
+    ./manage.py dumpdata core.group > crm_backend/fixtures/core/group.json
 
 Load fixtures:
 ```bash
 # roles
-python3 manage.py loaddata crm_backend/fixtures/core/role.json
+python3 manage.py loaddata crm_backend/fixtures/core/group.json
 
 # lead statuses
 python3 manage.py loaddata crm_backend/fixtures/lead/leadstatus.json

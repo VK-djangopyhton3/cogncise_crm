@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as StockGroup
 from django.utils.translation import gettext_lazy as _
 
-from core.models import User, Group, Role
+from core.models import User, Group
 from core.settings import CUSER_SETTINGS
 
 
@@ -12,7 +12,7 @@ from core.settings import CUSER_SETTINGS
 class UserAdmin(BaseUserAdmin):
     # add_form_template = 'admin/core/core/add_form.html'
     fieldsets = (
-        (None, {'fields': ('username', 'role', 'email', 'password')}),
+        (None, {'fields': ('username', 'email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'is_company', 'is_customer', 'is_cogncise')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -20,7 +20,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'role', 'email', 'password1', 'password2', 'is_company', 'is_customer', 'is_cogncise' ),
+            'fields': ('username', 'email', 'password1', 'password2', 'is_company', 'is_customer', 'is_cogncise' ),
         }),
     )
     # form = UserChangeForm
@@ -36,10 +36,10 @@ if CUSER_SETTINGS['register_proxy_auth_group_model']:
 
     @admin.register(Group)
     class GroupAdmin(BaseGroupAdmin):
-        pass
+        list_display = ['name', 'slug']
 
 
-class RoleAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'slug']
+# class RoleAdmin(admin.ModelAdmin):
+#     list_display = ['name', 'category', 'slug']
 
-admin.site.register(Role, RoleAdmin)
+# admin.site.register(Role, RoleAdmin)

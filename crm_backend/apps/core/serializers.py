@@ -1,13 +1,14 @@
 from common.common_serilizer_imports import *
 from django.contrib.auth import get_user_model
 
-from core.models import Role
+from core.models import Group
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    role = serializers.IntegerField()
 
 
     # def validate_password(self, value: str) -> str:
@@ -23,7 +24,18 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "role", "email", "first_name", "last_name", "mobile_number", "password", "is_company", "is_customer", "is_cogncise"]
 
-        extra_kwargs = {"role": {"required": True}} 
+        extra_kwargs = {"role": {"required": True}}
+
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        role = validated_data.pop('role')
+        # group = Group.get_group_obj(role)
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.groups.add(role)
+        user.save()
+        return user
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -67,7 +79,7 @@ class CheckUserSerializer(serializers.ModelSerializer):
         fields = ["email", "username"]
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Role
+        model = Group
         fields = ["id", "name", "slug", "role_name"]
