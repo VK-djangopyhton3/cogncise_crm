@@ -1,10 +1,17 @@
 from common.common_view_imports import *
+from appointment.models import Appointment, SechduleAppointment, TimeSlots
+from appointment.serializers import AppointmentSerializer, SechduleAppointmentSerializer, TimeSlotsSerializer
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
-    pagination_class = pagination_settings.DEFAULT_PAGINATION_CLASS
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+class SechduleAppointmentViewSet(viewsets.ModelViewSet):
+    queryset = SechduleAppointment.objects.all()
+    serializer_class = SechduleAppointmentSerializer
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
@@ -25,10 +32,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-                  
+            serializer.save()                  
 
             # logger.info(data)
-            return return_response(data, True, 'Successfully Created!', status.HTTP_200_OK)
+            return return_response(serializer.data, True, 'Successfully Created!', status.HTTP_200_OK)
 
         # logger.error(serializer.errors)
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
