@@ -38,6 +38,8 @@ from core.abstract_models import BaseModel
 #     def role_name(self):
 #         return self.__str__()
 
+
+
 #     def save(self, *args, **kwargs):
 #         super(Role, self).save(*args, **kwargs)
 #         if not self.slug:
@@ -176,6 +178,13 @@ class User(AbstractCUser, BaseModel):
         kwargs.update({ 'groups': Group.company_admin(), 'is_company': True, 'username': kwargs['email'] })
         return cls.objects.create(**kwargs)
 
+    @classmethod
+    def create_customer(cls, **kwargs):
+        kwargs.update({ 'role': Role.customer(), 'is_company':True})
+        if kwargs['username'] == None:
+            kwargs.update({ 'username': kwargs['email'] })
+        return cls.objects.create(**kwargs)
+
 
 BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
 BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
@@ -190,6 +199,10 @@ class Group(BaseGroup):
     @classmethod
     def company_admin(cls):
         return cls.objects.filter(slug='company_admin').last()
+
+     @classmethod
+    def customer(cls):
+        return cls.objects.filter(slug='cogncise_customer').last()
 
     @classmethod
     def get_group_obj(cls, group_id):
