@@ -42,6 +42,6 @@ class CustomPagination(PageNumberPagination):
             'previous': self.get_previous_link(),
             'count': self.page.paginator.count,
             'limit': self.page_size,
-            'results': data
+            'data': data
         }
         return return_response(data, True, 'List Successfully Retrieved!', status.HTTP_200_OK)
