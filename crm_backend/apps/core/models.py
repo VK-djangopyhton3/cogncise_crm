@@ -33,6 +33,10 @@ class Role(BaseModel):
     def company_admin(cls):
         return cls.objects.filter(slug='CompanyAdmin').last()
 
+    @classmethod
+    def customer(cls):
+        return cls.objects.filter(slug='CognciseCustomer').last()
+
     @property
     def role_name(self):
         return self.__str__()
@@ -170,6 +174,13 @@ class User(AbstractCUser, BaseModel):
         if user is not None: return user
 
         kwargs.update({ 'role': Role.company_admin(), 'is_company': True, 'username': kwargs['email'] })
+        return cls.objects.create(**kwargs)
+
+    @classmethod
+    def create_customer(cls, **kwargs):
+        kwargs.update({ 'role': Role.customer(), 'is_company':True})
+        if kwargs['username'] == None:
+            kwargs.update({ 'username': kwargs['email'] })
         return cls.objects.create(**kwargs)
 
 

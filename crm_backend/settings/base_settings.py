@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'shared',
     'lead',
     'job',
-
+    'customer',
 ]
 
 MIDDLEWARE = [
