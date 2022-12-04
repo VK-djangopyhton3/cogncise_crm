@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from django.contrib.auth.models import Group as BaseGroup
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.template.defaultfilters import slugify
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -145,7 +146,7 @@ class User(AbstractCUser, BaseModel):
     Password and email are required. Other fields are optional.
     """
     created_by = models.ForeignKey('self', on_delete=models.CASCADE, related_name='user_created_by', null=True, blank=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role', null=True)
+    # role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role', null=True)
     mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
 
     is_company = models.BooleanField(_('Company User'), default=False, help_text=_('Designates whether this user should be treated as company user. '), )
@@ -161,20 +162,67 @@ class User(AbstractCUser, BaseModel):
         return self.username
 
     @property
+    def role(self):
+        return self.groups.last()
+
+    @property
     def role_name(self):
-        return self.role and self.role.role_name
+        return self.groups.last() and self.groups.last().role_name
     
     @classmethod
     def create_company_admin(cls, **kwargs):
         user = cls.objects.filter(email = kwargs['email']).last()
         if user is not None: return user
 
-        kwargs.update({ 'role': Role.company_admin(), 'is_company': True, 'username': kwargs['email'] })
+        kwargs.update({ 'groups': Group.company_admin(), 'is_company': True, 'username': kwargs['email'] })
         return cls.objects.create(**kwargs)
+
+    # @classmethod
+    # def create_custom_user(cls, **kwargs):
+    #     user = cls.objects.filter(email = kwargs['email']).last()
+    #     if user is not None: return user
+
+    #     username = kwargs['email']
+    #     if 'username' in kwargs:
+    #         username = kwargs['username']
+
+    #     kwargs.update({'username': username })
+    #     user = cls.objects.create(**kwargs)
+    #     import pdb; pdb.set_trace()
+    #     user.groups.set(Group.get_user_group(kwargs['role']), clear=True)
+    #     return user
 
 
 class Group(BaseGroup):
+
+    slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
+    description = models.CharField(max_length=254, null=True, blank=True)
+
     class Meta:
         verbose_name = _('group')
-        verbose_name_plural = _('groups')
-        proxy = True
+        verbose_name_plural = _('roles')
+        app_label = 'auth'
+
+
+    @classmethod
+    def company_admin(cls):
+        return cls.objects.filter(slug='company_admin').last()
+
+    @classmethod
+    def get_user_group(cls, group_id):
+        return cls.objects.filter(id=group_id).last()
+
+    @property
+    def role_name(self):
+        return self.__str__()
+
+    def save(self, *args, **kwargs):
+        super(Group, self).save(*args, **kwargs)
+        if not self.slug:
+
+            self.slug = slugify(self.name)  # type: ignore
+            self.save()
+
+    def __str__(self):
+        return self.name
+
