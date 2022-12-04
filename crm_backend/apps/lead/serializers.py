@@ -1,7 +1,10 @@
 from common.common_serilizer_imports import *
-
+from django.contrib.auth import get_user_model
 from shared.serializers import AddressSerializer
 from lead.models import LeadSource, LeadStatus, Lead
+from company.serializers import OwnerSerializer
+
+user = get_user_model()
 
 class LeadSourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,10 +20,11 @@ class LeadStatusSerializer(serializers.ModelSerializer):
 
 class LeadSerializer(serializers.ModelSerializer):
     address = AddressSerializer(many=False)
+    owner = OwnerSerializer(many=False, read_only=True)
 
     class Meta:
         model   = Lead
-        exclude = ['created_at', 'updated_at']
+        fields = "__all__"
 
     def create(self, validated_data):
         address = validated_data.pop('address')
