@@ -49,13 +49,13 @@ api_urls = [
                 path('companies/', include('company.urls.api_urls', namespace='company')),
                 path('leads/',     include('lead.urls.api_urls',    namespace='lead')),
                 path('jobs/',      include('job.urls.api_urls',     namespace='job')),
-                path('',      include('core.urls.api_urls',    namespace='core')),
+                path('',           include('core.urls.api_urls',    namespace='core')),
             ]
 
         )
     ),
 
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
 
