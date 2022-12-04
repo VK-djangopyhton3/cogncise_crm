@@ -1,6 +1,7 @@
 from common.common_view_imports import *
+from rest_framework import filters
 from django.core.exceptions import ObjectDoesNotExist
-
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model, authenticate
 
 
@@ -21,6 +22,10 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated,]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['first_name', 'last_name', 'email', 'mobile_number']
+    ordering_fields = '__all__'
+    
 
 
     def get_permissions(self):
