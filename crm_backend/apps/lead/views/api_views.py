@@ -1,4 +1,5 @@
 from rest_framework import filters
+from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 from common.common_view_imports import *
 
@@ -23,7 +24,7 @@ class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
     serializer_class = LeadSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = ['company', 'source', 'status', 'owner', 'customer']
@@ -65,6 +66,11 @@ class LeadViewSet(viewsets.ModelViewSet):
             return return_response(serializer.data, True, 'Successfully Updated!', status.HTTP_200_OK)
 
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'])
+    def delete_all(self, request):
+            self.queryset.filter(id__in=request.data['ids']).delete()
+            return return_response({'detail': 'objects deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
