@@ -198,11 +198,11 @@ class Group(BaseGroup):
 
     @classmethod
     def company_admin(cls):
-        return cls.objects.filter(slug='company_admin').last()
+        return cls.objects.filter(slug='company-admin').last()
 
     @classmethod
     def customer(cls):
-        return cls.objects.filter(slug='cogncise_customer').last()
+        return cls.objects.filter(slug='cogncise-customer').last()
 
     @classmethod
     def get_group_obj(cls, group_id):
