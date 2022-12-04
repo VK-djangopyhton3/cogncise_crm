@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -194,3 +195,40 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # For cors origin
 CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', default=False, cast=bool)
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Cogncise Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Cogncise",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Cogncise",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo": 'assets/images/favicon.png',
+
+    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
+    "login_logo": 'assets/images/favicon.png',
+
+    # Logo to use for login form in dark themes (defaults to login_logo)
+    "login_logo_dark": 'assets/images/favicon.png',
+
+    # CSS classes that are applied to the logo above
+    "site_logo_classes": "img-circle",
+
+    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    "site_icon": 'assets/images/favicon.png',
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to the Cogncise",
+
+    # Copyright on the footer
+    "copyright": "Cogncise",
+
+
+    # # Add a language dropdown into the admin
+    # "language_chooser": True,
+}
+
