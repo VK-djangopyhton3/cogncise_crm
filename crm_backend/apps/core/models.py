@@ -200,7 +200,7 @@ class Group(BaseGroup):
     def company_admin(cls):
         return cls.objects.filter(slug='company_admin').last()
 
-     @classmethod
+    @classmethod
     def customer(cls):
         return cls.objects.filter(slug='cogncise_customer').last()
 
