@@ -79,14 +79,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return return_response(serializer.data, True, 'User Successfully Updated!', status.HTTP_200_OK)
 
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
-    
-    @action(detail=False, methods=['post'])
-    def delete_all(self, request):
-        try:
-            self.queryset.filter(id__in=request.data['ids']).delete()
-            return return_response({'detail': 'objects deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
-        except:
-            pass
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -95,6 +87,24 @@ class UserViewSet(viewsets.ModelViewSet):
         # self.perform_destroy(instance)
         return return_response({'detail': 'object deleted'}, True, 'User Successfully Deleted!', status.HTTP_200_OK)
 
+class UsersBulkDeleteAPIView(generics.GenericAPIView):
+
+    """
+    User bulk delete Operation View
+
+    User can perform CRUD operation to the system.
+    The data required are ids = [1,2,3].
+    """
+
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated,]
+
+
+    def post(self, request, *args, **kwargs):
+        if 'ids' in request.data:
+            self.queryset.filter(id__in=request.data['ids']).delete()
+            return return_response({'detail': 'objects deleted'}, True, 'Users successfully Deleted!', status.HTTP_200_OK)
+        return return_response('pass ids in data!', False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPIView(generics.GenericAPIView):
