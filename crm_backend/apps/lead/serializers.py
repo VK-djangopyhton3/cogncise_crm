@@ -3,18 +3,6 @@ from common.common_serilizer_imports import *
 from shared.serializers import AddressSerializer
 from lead.models import LeadSource, LeadStatus, Lead
 
-class LeadSourceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model   = LeadSource
-        exclude = ['created_at', 'updated_at']
-
-
-class LeadStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model   = LeadStatus
-        exclude = ['created_at', 'updated_at']
-
-
 class LeadSerializer(serializers.ModelSerializer):
     address = AddressSerializer(many=False)
 
@@ -39,3 +27,17 @@ class LeadSerializer(serializers.ModelSerializer):
             nested_serializer.update(nested_instance, address)
 
         return super().update(instance, validated_data)
+
+
+class LeadSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model   = LeadSource
+        exclude = ['created_at', 'updated_at']
+
+
+class LeadStatusSerializer(serializers.ModelSerializer):
+    leads = LeadSerializer(many=True, read_only=True, source='lead_status')
+
+    class Meta:
+        model   = LeadStatus
+        exclude = ['created_at', 'updated_at']
