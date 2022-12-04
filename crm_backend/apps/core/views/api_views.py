@@ -79,6 +79,14 @@ class UserViewSet(viewsets.ModelViewSet):
             return return_response(serializer.data, True, 'User Successfully Updated!', status.HTTP_200_OK)
 
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['post'])
+    def delete_all(self, request):
+        try:
+            self.queryset.filter(id__in=request.data['ids']).delete()
+            return return_response({'detail': 'objects deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
+        except:
+            pass
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
