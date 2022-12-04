@@ -13,42 +13,42 @@ from common.app_utils import profile_unique_upload
 from core.managers import UserManager as CustomeUserManager
 from core.abstract_models import BaseModel
 
-# class Role(BaseModel):
-      
-#     CATEGORY_CHOICES = (
-#       (1, 'Cogncise'),
-#       (2, 'Company'),    
-#     )
+BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
+BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
+class Group(BaseGroup):
 
-#     category = models.PositiveSmallIntegerField(_('role category'), choices=CATEGORY_CHOICES, default=1)
-#     name = models.CharField(_('name'), max_length=50)
-#     slug  = models.SlugField(max_length=50, unique=True, null=True, editable=False)
-
-#     class Meta:
-#         verbose_name = _('role')
-#         verbose_name_plural = _('roles')
-
-#         unique_together = ['name' , 'category']
-
-#     @classmethod
-#     def company_admin(cls):
-#         return cls.objects.filter(slug='CompanyAdmin').last()
-
-#     @property
-#     def role_name(self):
-#         return self.__str__()
+    class Meta:
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')
+        proxy = True
 
 
+    @classmethod
+    def company_admin(cls):
+        return cls.objects.filter(slug='company-admin').last()
 
-#     def save(self, *args, **kwargs):
-#         super(Role, self).save(*args, **kwargs)
-#         if not self.slug:
+    @classmethod
+    def customer(cls):
+        return cls.objects.filter(slug='cogncise-customer').last()
 
-#             self.slug = f'{self.get_category_display().capitalize()}{self.name.capitalize()}'  # type: ignore
-#             self.save()
+    @classmethod
+    def get_group_obj(cls, group_id):
+        return cls.objects.filter(id=group_id).last()
 
-#     def __str__(self):
-#         return f"{self.get_category_display()} {self.name}"  # type: ignore
+    @property
+    def role_name(self):
+        return self.__str__()
+
+    # def save(self, *args, **kwargs):
+    #     super(Group, self).save(*args, **kwargs)
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)  # type: ignore
+    #         self.save()
+
+    def __str__(self):
+        return self.name
+
+
 
     
 class AbstractCUser(AbstractBaseUser, PermissionsMixin):
@@ -172,52 +172,30 @@ class User(AbstractCUser, BaseModel):
     
     @classmethod
     def create_company_admin(cls, **kwargs):
+        kwargs.update({ 'is_company':True})
         user = cls.objects.filter(email = kwargs['email']).last()
-        if user is not None: return user
+        if user is not None: 
+            return user
+        if 'username' not in kwargs:
+            kwargs.update({ 'username': kwargs['email'] })
+        owner = cls.objects.create(**kwargs)
+        role = Group.company_admin() and Group.company_admin().id
+        owner.groups.add(role)
+        owner.save()
+            
+        return owner
 
-        kwargs.update({ 'groups': Group.company_admin(), 'is_company': True, 'username': kwargs['email'] })
-        return cls.objects.create(**kwargs)
 
     @classmethod
     def create_customer(cls, **kwargs):
-        kwargs.update({ 'role': Role.customer(), 'is_company':True})
-        if kwargs['username'] == None:
+        kwargs.update({ 'is_company':True})
+        if 'username' not in kwargs:
             kwargs.update({ 'username': kwargs['email'] })
-        return cls.objects.create(**kwargs)
+        customer = cls.objects.create(**kwargs)
+        role = Group.customer()
+        customer.groups.add(role)
+        customer.save()
+            
+        return 
 
-
-BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
-BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
-class Group(BaseGroup):
-
-    class Meta:
-        verbose_name = _('group')
-        verbose_name_plural = _('groups')
-        proxy = True
-
-
-    @classmethod
-    def company_admin(cls):
-        return cls.objects.filter(slug='company-admin').last()
-
-    @classmethod
-    def customer(cls):
-        return cls.objects.filter(slug='cogncise-customer').last()
-
-    @classmethod
-    def get_group_obj(cls, group_id):
-        return cls.objects.filter(id=group_id).last()
-
-    @property
-    def role_name(self):
-        return self.__str__()
-
-    # def save(self, *args, **kwargs):
-    #     super(Group, self).save(*args, **kwargs)
-    #     if not self.slug:
-    #         self.slug = slugify(self.name)  # type: ignore
-    #         self.save()
-
-    def __str__(self):
-        return self.name
 
