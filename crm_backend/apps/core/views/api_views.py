@@ -98,6 +98,7 @@ class UsersBulkDeleteAPIView(generics.GenericAPIView):
 
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated,]
+    allowed_methods = ['post']
 
 
     def post(self, request, *args, **kwargs):

@@ -11,6 +11,6 @@ urlpatterns = [
     path('auth/login/', LoginAPIView.as_view(), name='auth_login'),
     path('auth/logout/', LogoutAPIView.as_view(), name='auth_logout'),
     path('auth/roles/', RoleListView.as_view(), name='roles'),
-    path('auth/users/delete_all/', UsersBulkDeleteAPIView.as_view(), name='delete-bulk-user'),
+    path('auth/users/delete-all/', UsersBulkDeleteAPIView.as_view(), name='delete_bulk_user'),
     # path('auth/profile/', RetrieveUpdateProfileAPIView.as_view(), name='auth_profile'),
 ]
