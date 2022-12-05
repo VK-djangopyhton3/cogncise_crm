@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Group
 
 from core.serializers import *
+from shared.serializers import BulkDeleteSerilizer
 from core import utils
 
 User = get_user_model()
@@ -98,14 +99,14 @@ class UsersBulkDeleteAPIView(generics.GenericAPIView):
 
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated,]
-    allowed_methods = ['post']
-
+    serializer_class = BulkDeleteSerilizer
 
     def post(self, request, *args, **kwargs):
-        if 'ids' in request.data:
-            self.queryset.filter(id__in=request.data['ids']).delete()
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.queryset.filter(id__in=serializer.data['ids']).update(is_deleted=True)
             return return_response({'detail': 'objects deleted'}, True, 'Users successfully Deleted!', status.HTTP_200_OK)
-        return return_response('pass ids in data!', False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPIView(generics.GenericAPIView):
