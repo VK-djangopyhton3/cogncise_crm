@@ -10,16 +10,17 @@ from company.serializers import OwnerSerializer
 class CustomerSerializer(serializers.ModelSerializer):
 
     address = AddressSerializer(many=False)
-    user = OwnerSerializer(many=False, read_only=True)
+    user = OwnerSerializer(many=False)
 
     class Meta:
         model   = Customer
         exclude = ['created_at', 'updated_at']
+        depth = 1
 
     def create(self, validated_data):
         address = validated_data.pop('address')
         user = User.create_customer(**validated_data)
-        customer = Customer.objects.create({'user':user})
+        customer = Customer.objects.create(user=user)
         if address is not None:
             customer.addresses.create(**address)
 

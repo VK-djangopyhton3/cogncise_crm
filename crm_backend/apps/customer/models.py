@@ -8,7 +8,7 @@ from shared.models import Address
 User = get_user_model()
 
 class Customer(BaseModel):
-    addresses = GenericRelation(Address, related_query_name='customer_address')
+    addresses = GenericRelation(Address, related_query_name='customer_address', null = True, blank = True)
     user     = models.ForeignKey(User,  related_name="customer_owner", on_delete=models.CASCADE)
 
 

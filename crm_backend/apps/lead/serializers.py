@@ -8,13 +8,17 @@ from company.serializers import OwnerSerializer
 
 user = get_user_model()
 
-class LeadSerializer(serializers.ModelSerializer):
+class LeadSerializer(FlexFieldsModelSerializer):
     address = AddressSerializer(many=False)
-    owner = OwnerSerializer(many=False, read_only=True)
+    # owner = OwnerSerializer(many=False)
 
     class Meta:
         model   = Lead
         fields = "__all__"
+    
+        expandable_fields = {
+            'owner': (OwnerSerializer, {'read_only': True})
+            }
 
     def create(self, validated_data):
         address = validated_data.pop('address')

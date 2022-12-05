@@ -5,6 +5,7 @@ from common.common_view_imports import *
 
 from lead.models import LeadSource, LeadStatus, Lead
 from lead.serializers import LeadSourceSerializer, LeadStatusSerializer, LeadSerializer
+from shared.serializers import BulkDeleteSerilizer
 
 class LeadSourceListAPIView(generics.ListAPIView):
     queryset = LeadSource.objects.all()
@@ -63,19 +64,31 @@ class LeadViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         if serializer.is_valid():
             self.perform_update(serializer)
-            return return_response(serializer.data,leads/delete_all/ True, 'Successfully Updated!', status.HTTP_200_OK)
+            return return_response(serializer.data, True, 'Successfully Updated!', status.HTTP_200_OK)
 
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=False, methods=['post'])
-    def delete_all(self, request):
-        try:
-            self.queryset.filter(id__in=request.data['ids']).delete()
-            return return_response({'detail': 'objects deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
-        except:
-            pass
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
         return return_response({'detail': 'object deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
+
+class LeadsBulkDeleteAPIView(generics.GenericAPIView):
+
+    """
+    User bulk delete Operation View
+
+    User can perform Bulk delete operation to the system.
+    The data required are ids = [1,2,3].
+    """
+
+    queryset = Lead.objects.all()
+    permission_classes = [IsAuthenticated,]
+    serializer_class = BulkDeleteSerilizer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.queryset.filter(id__in=serializer.data['ids']).update(is_deleted=True)
+            return return_response({'detail': 'objects deleted'}, True, 'Leads successfully Deleted!', status.HTTP_200_OK)
+        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)

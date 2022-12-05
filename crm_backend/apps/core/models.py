@@ -190,12 +190,16 @@ class User(AbstractCUser, BaseModel):
     def create_customer(cls, **kwargs):
         kwargs.update({ 'is_company':True})
         if 'username' not in kwargs:
-            kwargs.update({ 'username': kwargs['email'] })
+            try:
+                kwargs.update({ 'username': kwargs['email'] })
+            except:
+                kwargs = kwargs['user']
+                kwargs.update({ 'username': kwargs['email'] })
         customer = cls.objects.create(**kwargs)
-        role = Group.customer()
+        role = Group.customer() and Group.customer().id
         customer.groups.add(role)
         customer.save()
             
-        return 
+        return customer
 
 
