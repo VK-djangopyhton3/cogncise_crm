@@ -10,3 +10,7 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         exclude = ['created_at', 'updated_at', 'object_id', 'content_type']
         read_only_fields = ['content_object']
+
+
+class BulkDeleteSerilizer(serializers.Serializer):
+    ids = serializers.ListField(child=serializers.IntegerField() )
