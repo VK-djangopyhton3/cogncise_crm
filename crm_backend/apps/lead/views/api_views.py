@@ -89,6 +89,6 @@ class LeadsBulkDeleteAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            self.queryset.filter(id__in=serializer.data['ids']).update(is_deleted=True)
+            self.queryset.filter(id__in=serializer.data['ids']).delete()
             return return_response({'detail': 'objects deleted'}, True, 'Leads successfully Deleted!', status.HTTP_200_OK)
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
