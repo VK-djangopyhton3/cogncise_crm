@@ -11,6 +11,8 @@ class Customer(BaseModel):
     addresses = GenericRelation(Address, related_query_name='customer_address', null = True, blank = True)
     user     = models.ForeignKey(User,  related_name="customer_owner", on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.user.first_name} | {self.user.last_name}"

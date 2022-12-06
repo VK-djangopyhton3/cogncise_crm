@@ -15,6 +15,7 @@ from core.abstract_models import BaseModel
 
 BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
 BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
+
 class Group(BaseGroup):
 
     class Meta:
@@ -49,8 +50,6 @@ class Group(BaseGroup):
         return self.name
 
 
-
-    
 class AbstractCUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
@@ -140,6 +139,7 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+
 class User(AbstractCUser, BaseModel):
     """
     Users within the Django authentication system are represented by this
@@ -158,6 +158,7 @@ class User(AbstractCUser, BaseModel):
 
     class Meta(AbstractCUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.username
@@ -201,5 +202,3 @@ class User(AbstractCUser, BaseModel):
         customer.save()
             
         return customer
-
-

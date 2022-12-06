@@ -16,6 +16,7 @@ class Company(BaseModel):
     class Meta:
         verbose_name = _("Company")
         verbose_name_plural = _("Companies")
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.name} | {self.abn}"

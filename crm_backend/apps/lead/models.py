@@ -14,6 +14,7 @@ class LeadStatus(BaseModel):
     class Meta:
         verbose_name = _("Lead Status")
         verbose_name_plural = _("Lead Status")
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
@@ -25,6 +26,7 @@ class LeadSource(BaseModel):
     class Meta:
         verbose_name = _("Lead Source")
         verbose_name_plural = _("Lead Sources")
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
@@ -37,6 +39,9 @@ class Lead(BasicInformation):
     owner     = models.ForeignKey(User,       related_name="lead_owner",    on_delete=models.CASCADE)
     customer  = models.ForeignKey(User,       related_name="lead_customer", on_delete=models.CASCADE, null=True, blank=True)
     company   = models.ForeignKey(Company,    related_name="lead_company",  on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.first_name} {self.source}"

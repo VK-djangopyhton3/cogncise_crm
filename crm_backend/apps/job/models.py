@@ -11,7 +11,10 @@ class Job(BasicInformation):
     title = models.CharField( _("title"),  max_length=100)
     addresses = GenericRelation(Address,   related_query_name='job')
     company   = models.ForeignKey(Company, related_name="job_company", on_delete=models.CASCADE, null=True, blank=True)
-    
+
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return f"{self.title}"
 
