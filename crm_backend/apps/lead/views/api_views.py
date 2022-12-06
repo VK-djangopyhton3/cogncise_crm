@@ -1,5 +1,4 @@
 from rest_framework import filters
-from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 from common.common_view_imports import *
 
@@ -28,7 +27,13 @@ class LeadViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
-    filterset_fields = ['company', 'source', 'status', 'owner', 'customer']
+    filterset_fields = {
+        'company':  ['in', 'exact'],
+        'source':   ['in', 'exact'],
+        'customer': ['in', 'exact'],
+        'owner':    ['in', 'exact'],
+        'status':   ['in', 'exact']
+    }
     ordering_fields = '__all__'
 
     
@@ -72,6 +77,7 @@ class LeadViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return return_response({'detail': 'object deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
+
 
 class LeadsBulkDeleteAPIView(generics.GenericAPIView):
 
