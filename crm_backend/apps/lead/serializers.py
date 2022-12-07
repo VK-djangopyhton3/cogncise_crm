@@ -1,26 +1,22 @@
 from common.common_serilizer_imports import *
-from django.contrib.auth import get_user_model
 from rest_flex_fields import FlexFieldsModelSerializer
 
-from shared.serializers import AddressSerializer
+from shared.serializers import AddressSerializer, CompanyMixin
 from lead.models import LeadSource, LeadStatus, Lead
 from company.serializers import OwnerSerializer
 
-user = get_user_model()
-
-class LeadSerializer(FlexFieldsModelSerializer):
+class LeadSerializer(CompanyMixin, FlexFieldsModelSerializer):
     address = AddressSerializer(many=False)
+    owner   = OwnerSerializer(read_only=True)
 
     class Meta:
         model = Lead
-        fields = "__all__"    
-        expandable_fields = {
-            'owner': (OwnerSerializer, { 'read_only': True })
-        }
+        fields = "__all__"
 
     def create(self, validated_data):
         address = validated_data.pop('address')
-        lead = Lead.objects.create(**validated_data)
+        lead = Lead.objects.create(company=self.company, owner=self.request_user, **validated_data)
+        # create address
         if address is not None:
             lead.addresses.create(**address)
 

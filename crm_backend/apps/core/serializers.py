@@ -66,7 +66,7 @@ class ShowUserSerializer(serializers.ModelSerializer):
     class Meta:
         """Passing model metadata"""
         model = User
-        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token"]
+        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token", "is_cogncise", "is_customer", "is_company", "company_id"]
         read_only_fields = ["id", "username", "email", "auth_token"]
 
 

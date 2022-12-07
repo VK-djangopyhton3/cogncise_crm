@@ -172,7 +172,7 @@ class User(AbstractCUser, BaseModel):
     @property
     def role_name(self):
         return self.groups.last() and self.groups.last().name
-    
+
     @classmethod
     def create_company_admin(cls, **kwargs):
         kwargs.update({ 'is_company':True})

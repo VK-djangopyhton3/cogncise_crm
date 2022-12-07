@@ -4,6 +4,7 @@ from customer.models import Customer
 from customer.serializers import CustomerSerializer
 
 class CustomerViewSet(viewsets.ModelViewSet):
+    swagger_tag = ["customers"]
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]

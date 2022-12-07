@@ -6,6 +6,7 @@ from job.models import Job
 from job.serializers import JobSerializer
 
 class JobViewSet(viewsets.ModelViewSet):
+    swagger_tag = ["jobs"]
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
