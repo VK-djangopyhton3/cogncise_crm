@@ -33,6 +33,16 @@
         "model": "auth.group",
         "pk": 4,
         "fields": {
+            "name": "Cogncise Field Worker",
+            "description": "Cogncise Field Worker",
+            "slug": "cogncise-field-worker",
+            "permissions": []
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 5,
+        "fields": {
             "name": "Company Admin",
             "description": "Company Admin",
             "slug": "company-admin",
@@ -41,7 +51,7 @@
     },
     {
         "model": "auth.group",
-        "pk": 5,
+        "pk": 6,
         "fields": {
             "name": "Company Staff",
             "description": "Company Staff",
@@ -51,7 +61,7 @@
     },
     {
         "model": "auth.group",
-        "pk": 6,
+        "pk": 7,
         "fields": {
             "name": "Company Auditor",
             "description": "Company Auditor",
@@ -61,7 +71,7 @@
     },
     {
         "model": "auth.group",
-        "pk": 7,
+        "pk": 8,
         "fields": {
             "name": "Company Field Worker",
             "description": "Company Field Worker",
@@ -71,11 +81,11 @@
     },
     {
         "model": "auth.group",
-        "pk": 8,
+        "pk": 9,
         "fields": {
             "name": "Customer",
             "description": "Cogncise Customer",
-            "slug": "cogncise-customer",
+            "slug": "customer",
             "permissions": []
         }
     }

@@ -75,6 +75,8 @@ SWAGGER_SETTINGS = {
    'DEFAULT_AUTO_SCHEMA_CLASS': 'common.swagger_schema_generator.SwaggerSchemaGenerator',
 }
 
+FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixtures')]
+
 ROOT_URLCONF = 'crm_backend.urls'
 
 
