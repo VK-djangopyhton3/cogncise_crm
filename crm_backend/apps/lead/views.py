@@ -1,25 +1,28 @@
-from rest_framework import filters, serializers
+from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
-
 from common.common_view_imports import *
 
+from lead.models import Lead
+from lead.serializers import LeadSerializer
+from shared.serializers import BulkDeleteSerilizer
+
 class CrudViewSet(viewsets.ModelViewSet):
-    queryset = Q()
-    serializer_class = serializers.ModelSerializer()
+    queryset = Lead.objects.all()
+    serializer_class = LeadSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = []
+    search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = {
-        'id':  ['in', 'exact']
+        'company':  ['in', 'exact'],
+        'source':   ['in', 'exact'],
+        'customer': ['in', 'exact'],
+        'owner':    ['in', 'exact'],
+        'status':   ['in', 'exact']
     }
     ordering_fields = '__all__'
 
-    # def get_queryset(self):
-    #     self.queryset = self.queryset.filter(company=self.request.user.company)
-    #     return self.queryset
-
+    
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -59,29 +62,3 @@ class CrudViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return return_response({'detail': 'object deleted'}, True, 'Successfully Deleted!', status.HTTP_200_OK)
-
-
-class BulkDeleteAPIView(generics.GenericAPIView):
-    queryset = Q()
-    permission_classes = [IsAuthenticated,]
-    serializer_class = serializers.ModelSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.queryset.filter(id__in=serializer.data['ids']).update(is_deleted=True)  # type: ignore
-            return return_response({ 'detail': 'objects deleted' }, True, 'Records successfully Deleted!', status.HTTP_200_OK)
-        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
-
-
-class BulkRestoreAPIView(generics.GenericAPIView):
-    queryset = Q()
-    permission_classes = [IsAuthenticated,]
-    serializer_class = serializers.ModelSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.queryset.filter(id__in=serializer.data['ids']).update(is_deleted=False)  # type: ignore
-            return return_response({ 'detail': 'objects restored' }, True, 'Records successfully Restored!', status.HTTP_200_OK)
-        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'phonenumber_field',
+    'django_extensions',
 
 
     # Local apps,
@@ -69,6 +70,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SWAGGER_SETTINGS = {
+   'DEFAULT_AUTO_SCHEMA_CLASS': 'common.swagger_schema_generator.SwaggerSchemaGenerator',
+}
+
+FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixtures')]
 
 ROOT_URLCONF = 'crm_backend.urls'
 

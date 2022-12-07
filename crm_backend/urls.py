@@ -47,9 +47,9 @@ api_urls = [
         include(
             [
                 path('companies/', include('company.urls.api_urls', namespace='company')),
-                path('leads/',     include('lead.urls.api_urls',    namespace='lead')),
-                path('jobs/',      include('job.urls.api_urls',     namespace='job')),
-                path('customers/', include('customer.urls.api_urls',    namespace='customer')),
+                path('companies/<int:company_id>/leads/',     include('lead.urls.api_urls',    namespace='lead')),
+                path('companies/<int:company_id>/jobs/',      include('job.urls.api_urls',     namespace='job')),
+                path('companies/<int:company_id>/customers/', include('customer.urls.api_urls',    namespace='customer')),
                 path('',           include('core.urls.api_urls',    namespace='core')),
             ]
 
