@@ -6,6 +6,7 @@ from shared.serializers import BulkDeleteSerilizer
 from shared.views import CrudViewSet, BulkDeleteAPIView
 
 class LeadSourceListAPIView(generics.ListAPIView):
+    swagger_tag = ["lead sources"]
     queryset = LeadSource.objects.all()
     serializer_class = LeadSourceSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -13,13 +14,14 @@ class LeadSourceListAPIView(generics.ListAPIView):
 
 
 class LeadStatusListAPIView(generics.ListAPIView):
+    swagger_tag = ["lead statuses"]
     queryset = LeadStatus.objects.all()
     serializer_class = LeadStatusSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-
 class LeadViewSet(CrudViewSet):
+    swagger_tag = ["leads"]
     queryset = Lead.objects.all()
     serializer_class = LeadSerializer
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']

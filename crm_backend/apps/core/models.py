@@ -155,6 +155,8 @@ class User(AbstractCUser, BaseModel):
     is_cogncise = models.BooleanField(_('Cogncise User'), default=False, help_text=_('Designates whether this user should be treated as cogncise staff user. '), )
 
     profile_pic = models.ImageField(upload_to=profile_unique_upload, null=True, blank=True)
+    
+    company   = models.ForeignKey('company.Company', related_name="user_company", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta(AbstractCUser.Meta):
         swappable = 'AUTH_USER_MODEL'

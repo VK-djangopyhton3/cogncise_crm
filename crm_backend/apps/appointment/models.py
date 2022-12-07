@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from job.models import Job
 from shared.models import Address
 from core.abstract_models import BasicInformation, BaseModel
+from company.models import Company
 # Create your models here.
 
 class WorkType(BaseModel):
@@ -22,6 +23,7 @@ class Appointment(BaseModel):
     work_type  = models.ForeignKey(WorkType, related_name="work_type",   on_delete=models.CASCADE)
     job  = models.ForeignKey(Job, related_name="job_apointment",   on_delete=models.CASCADE)
     instruction = models.CharField( _("instruction"), max_length=100)
+    company = models.ForeignKey(Company, related_name="appointment_company", on_delete=models.CASCADE, null=True, blank=True)
     
     class Meta:
         ordering = ['-created_at']
