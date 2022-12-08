@@ -26,6 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number']
     ordering_fields = '__all__'
+    swagger_tag = ['users']
     
 
 
@@ -88,6 +89,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # self.perform_destroy(instance)
         return return_response({'detail': 'object deleted'}, True, 'User Successfully Deleted!', status.HTTP_200_OK)
 
+
 class UsersBulkDeleteAPIView(generics.GenericAPIView):
 
     """
@@ -100,6 +102,7 @@ class UsersBulkDeleteAPIView(generics.GenericAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated,]
     serializer_class = BulkDeleteSerilizer
+    swagger_tag = ['users']
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -147,7 +150,6 @@ class LoginAPIView(generics.GenericAPIView):
         return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
 
 
-
 class LogoutAPIView(views.APIView):
     permission_classes = [IsAuthenticated]
 
@@ -161,7 +163,6 @@ class LogoutAPIView(views.APIView):
             return return_response(
                 None, False, 'Unauthorized user!', status.HTTP_401_UNAUTHORIZED
             )
-
 
 
 class RetrieveUserExistsAPIView(generics.GenericAPIView):
@@ -254,8 +255,10 @@ class RetrieveUpdateProfileAPIView(generics.RetrieveUpdateAPIView):
             serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST
         )
 
+
 class RoleListView(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
+    swagger_tag = ['roles']
