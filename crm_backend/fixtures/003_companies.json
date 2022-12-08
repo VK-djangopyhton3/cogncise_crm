@@ -8,7 +8,8 @@
             "is_deleted": false,
             "name": "Cogncise LLC",
             "abn": "ABNCOGNCISE",
-            "owner": 2
+            "owner": 2,
+            "status": 1
         }
     },
     {
@@ -20,7 +21,8 @@
             "is_deleted": false,
             "name": "ABC LLC",
             "abn": "ABNABC",
-            "owner": 3
+            "owner": 3,
+            "status": 1
         }
     }
 ]

@@ -1,11 +1,6 @@
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
+import datetime, uuid
 
-import requests, json, uuid, secrets, random
-import urllib.request
-import urllib.parse
-
+# timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 def unique_media_upload(instance, filename):
     ext = filename.split('.').pop()
@@ -15,3 +10,8 @@ def unique_media_upload(instance, filename):
 def profile_unique_upload(instance, filename):
     ext = filename.split('.').pop()
     return f"images/profiles/{instance._meta.model_name}/{uuid.uuid4().hex[:6]}.{ext}"
+
+
+def logo_media_upload(instance, filename):
+    ext = filename.split('.').pop()
+    return f"images/{instance._meta.model_name}/{instance.abn}.{ext}"

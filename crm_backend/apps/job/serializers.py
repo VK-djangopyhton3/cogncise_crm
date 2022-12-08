@@ -1,10 +1,10 @@
 from common.common_serilizer_imports import *
 
-from shared.serializers import AddressSerializer
+from shared.serializers import AddressSerializer, CompanyMixin
 from job.models import Job
 
 # Job Serializer
-class JobSerializer(serializers.ModelSerializer):
+class JobSerializer(CompanyMixin, serializers.ModelSerializer):
     business_address = AddressSerializer(many=False)
     property_address = AddressSerializer(many=False)
 
@@ -15,10 +15,12 @@ class JobSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         business_address = validated_data.pop('business_address')
         property_address = validated_data.pop('property_address')
-        job = Job.objects.create(**validated_data)
+        job = Job.objects.create(company=self.company, **validated_data)
+        # create business address
         if business_address:
             business_address.update({ 'purpose': 'business' })
             job.addresses.create(**business_address)
+        # create property address
         if property_address:
             property_address.update({ 'purpose': 'property' })
             job.addresses.create(**property_address)

@@ -14,7 +14,7 @@ class OwnerSerializer(serializers.ModelSerializer):
 
 
 class CompanySerializer(serializers.ModelSerializer):
-    address = AddressSerializer(many=False)
+    address = AddressSerializer(many=False, allow_null=True, required=False)
     owner   = OwnerSerializer(many=False)
 
     class Meta:
