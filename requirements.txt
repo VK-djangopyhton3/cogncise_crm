@@ -12,3 +12,4 @@ Pillow
 drf-flex-fields
 django-jazzmin
 Faker
+django-extensions
