@@ -39,13 +39,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
-    # email = serializers.CharField(required=False)
-    username = serializers.CharField(required=False)
+    email = serializers.EmailField()
+    # username = serializers.CharField(required=False)
     password = serializers.CharField(required=True, style={"input_type": "password"})
     
     class Meta:
         model = User
-        fields = ["username", "password"]
+        fields = ["email", "password"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class ShowUserSerializer(serializers.ModelSerializer):
     class Meta:
         """Passing model metadata"""
         model = User
-        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token"]
+        fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login", "auth_token", "is_cogncise", "is_customer", "is_company", "company_id"]
         read_only_fields = ["id", "username", "email", "auth_token"]
 
 

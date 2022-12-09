@@ -1,12 +1,14 @@
 from common.common_view_imports import *
-from appointment.models import Appointment, SechduleAppointment, TimeSlots
-from appointment.serializers import AppointmentSerializer, SechduleAppointmentSerializer, TimeSlotsSerializer
 
-class AppointmentViewSet(viewsets.ModelViewSet):
+from shared.views import CrudViewSet
+from appointment.models import Appointment, SechduleAppointment
+from appointment.serializers import AppointmentSerializer, SechduleAppointmentSerializer
+
+class AppointmentViewSet(CrudViewSet):
+    swagger_tag = ["appointments"]
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+
 
 class SechduleAppointmentViewSet(viewsets.ModelViewSet):
     queryset = SechduleAppointment.objects.all()

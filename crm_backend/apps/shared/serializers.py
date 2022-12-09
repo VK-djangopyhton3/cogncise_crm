@@ -13,4 +13,18 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class BulkDeleteSerilizer(serializers.Serializer):
-    ids = serializers.ListField(child=serializers.IntegerField() )
+    ids = serializers.ListField(child=serializers.IntegerField())
+
+
+class CompanyMixin(metaclass=serializers.SerializerMetaclass):
+    @property
+    def request_user(self):
+        return self.context.get('request').user  # type: ignore
+
+    @property
+    def company_id(self):
+        return self.context.get('company_id')  # type: ignore
+
+    @property
+    def company(self):
+        return self.context.get('company')  # type: ignore

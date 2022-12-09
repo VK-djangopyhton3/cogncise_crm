@@ -101,8 +101,8 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomeUserManager()
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = _('user')
@@ -172,7 +172,7 @@ class User(AbstractCUser, BaseModel):
     @property
     def role_name(self):
         return self.groups.last() and self.groups.last().name
-    
+
     @classmethod
     def create_company_admin(cls, **kwargs):
         kwargs.update({ 'is_company':True})

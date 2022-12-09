@@ -1,11 +1,9 @@
 from common.common_serilizer_imports import *
 
-from shared.serializers import AddressSerializer
 from appointment.models import Appointment, SechduleAppointment, TimeSlots
 
 # Appointment Serializer
 class AppointmentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Appointment
         exclude = ['created_at', 'updated_at']

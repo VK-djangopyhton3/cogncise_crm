@@ -20,6 +20,7 @@ class LeadStatusListAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
+
 class LeadViewSet(CrudViewSet):
     swagger_tag = ["leads"]
     queryset = Lead.objects.all()
@@ -33,16 +34,8 @@ class LeadViewSet(CrudViewSet):
         'status':   ['in', 'exact']
     }
 
-    def create(self, request, *args, **kwargs):
-        request.data['owner'] = request.user.id
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return return_response(serializer.data, True, 'Successfully Created!', status.HTTP_200_OK)
-        
-        return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
-
 
 class LeadsBulkDeleteAPIView(BulkDeleteAPIView):
+    swagger_tag = ["leads"]
     queryset = Lead.objects.all()
     serializer_class = BulkDeleteSerilizer

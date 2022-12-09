@@ -51,15 +51,16 @@ class AuthorAllStaffAllButEditOrReadOnly(permissions.BasePermission):
 
 class IsCompany(permissions.BasePermission):
     """
-    Object-level permission to only allow owners of an object to edit it.
-    Assumes the model instance has an `owner` attribute.
+    Allows access only to either Cogncise or respective company users
     """
 
-    def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in permissions.SAFE_METHODS:
-            return True
+    def has_permission(self, request, view):
+        company_id = request.resolver_match.kwargs.get('company_id')
 
-        # Instance must have an attribute named `owner`.
-        return obj.company == request.user.company
+        if company_id is None:
+            return False
+
+        if request.user.is_cogncise:
+            return True
+        else:
+            return company_id == request.user.company_id

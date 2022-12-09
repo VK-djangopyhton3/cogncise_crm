@@ -27,6 +27,7 @@
             "is_superuser": false,
             "is_company": true,
             "is_active": true,
+            "is_cogncise": true,
             "groups": [
                 1
             ],
@@ -46,6 +47,7 @@
             "is_superuser": false,
             "is_company": true,
             "is_active": true,
+            "is_cogncise": false,
             "groups": [
                 4
             ],
