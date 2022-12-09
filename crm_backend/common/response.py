@@ -34,14 +34,14 @@ def custom_exception_handler(exc, context):
 
 class CustomPagination(PageNumberPagination):
 
-    page_size_query_param = "page_size"
+    page_size_query_param = "limit"
     
     def get_paginated_response(self, data):
         data = {
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'count': self.page.paginator.count,
-            'limit': self.page_size,
+            'limit': self.page.paginator.per_page or self.page_size,
             'data': data
         }
         return return_response(data, True, 'List Successfully Retrieved!', status.HTTP_200_OK)
