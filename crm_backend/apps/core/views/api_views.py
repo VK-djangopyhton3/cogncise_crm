@@ -127,8 +127,8 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
-                username = serializer.validated_data.get('username', '').lower()
-                user = User.objects.get(username__iexact=username)
+                email = serializer.validated_data.get('email', '').lower()
+                user = User.objects.get(email__iexact=email)
             except ObjectDoesNotExist:
                 return return_response('User does not exist, please register now!', False, 'User does not exist, please register now!', status.HTTP_404_NOT_FOUND, )
 
@@ -136,7 +136,7 @@ class LoginAPIView(generics.GenericAPIView):
                 return return_response('Access prohibited!', False, 'Access prohibited!', status.HTTP_403_FORBIDDEN, )
 
             password = serializer.validated_data.get('password', '')
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
 
             if user is not None and user.is_active:
                 if user.is_authenticated:
