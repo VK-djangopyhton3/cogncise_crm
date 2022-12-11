@@ -29,7 +29,7 @@ class Company(BaseModel):
     logo          = models.ImageField(upload_to=logo_media_upload, null=True, blank=True)
     status        = models.ForeignKey(CompanyStatus, related_name="company_status", on_delete=models.CASCADE)
     addresses     = GenericRelation(Address, related_query_name='company')
-    owner         = models.ForeignKey(User,  related_name="company_owner", on_delete=models.CASCADE)
+    owner         = models.ForeignKey(User,  related_name="company_owner", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = _("Company")

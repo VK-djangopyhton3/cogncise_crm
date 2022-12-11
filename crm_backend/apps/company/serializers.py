@@ -15,7 +15,7 @@ class OwnerSerializer(serializers.ModelSerializer):
 
 class CompanySerializer(serializers.ModelSerializer):
     address = AddressSerializer(many=False, allow_null=True, required=False)
-    owner   = OwnerSerializer(many=False)
+    owner   = OwnerSerializer(many=False, required = False)
 
     class Meta:
         model   = Company
@@ -24,10 +24,11 @@ class CompanySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         address = validated_data.pop('address')
         owner_data = validated_data.pop('owner')
-        owner = User.create_company_admin(**owner_data)
-        company = Company.objects.create(owner=owner, **validated_data)
-        owner.company = company
-        owner.save()
+        if owner_data is not None:
+            owner = User.create_company_admin(**owner_data)
+            company = Company.objects.create(owner=owner, **validated_data)
+            owner.company = company
+            owner.save()
         if address is not None:
             company.addresses.create(**address)
 
