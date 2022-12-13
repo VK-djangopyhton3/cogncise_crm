@@ -7,5 +7,6 @@ router = routers.DefaultRouter()
 router.register(r'', CustomerViewSet, basename='customer')
 
 urlpatterns = [
+    path('bulk-delete/', CustomersBulkDeleteAPIView.as_view(), name='delete_bulk_customer'),
     path('', include(router.urls)),
 ]

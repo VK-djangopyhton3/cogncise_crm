@@ -8,6 +8,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
+import pyotp, random
+from datetime import timedelta
 
 from common.app_utils import profile_unique_upload
 from core.managers import UserManager as CustomeUserManager
@@ -204,3 +207,101 @@ class User(AbstractCUser, BaseModel):
         customer.save()
             
         return customer
+
+
+class OTPVerify(BaseModel):
+    user = models.OneToOneField( User, on_delete=models.CASCADE, editable=False, related_name='user_otp', null=True, blank=True)
+
+    email = models.EmailField(
+        _('email address'),
+        unique=True, blank=True, null=True,
+        error_messages={
+            'unique': _("A user with that email address already exists."),
+        },
+    )
+
+    mobile_number = PhoneNumberField(_('mobile number'), error_messages={ 'unique': _("A user with that mobile number already exists."),}, blank=True, null=True, unique=True)
+    # otp = models.CharField(editable=False, default=False, max_length=6) #storing otp
+    mobile_counter_secret = models.IntegerField(editable=False, default=0) # storing counter
+    email_counter_secret = models.IntegerField(editable=False, default=0) # storing counter
+    email_mfa_secret = models.CharField(_('email mfa secret'), editable=False, max_length=40, default=pyotp.random_base32())
+    mobile_mfa_secret = models.CharField(_('mobile mfa secret'), editable=False, max_length=40, default=pyotp.random_base32())
+    is_used = models.BooleanField(default=False) #default is True when not using otp is used
+    is_verified = models.BooleanField(default=False) #default is True when not using otp email or mobile verification
+    is_registered = models.BooleanField(default=False) #default is True when not using otp email or mobile verification
+    otp_created_at = models.DateTimeField(auto_now=True, db_index=True)
+
+    sms_api_response = models.JSONField(null=True)
+    is_sent = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.email or self.mobile_number.as_e164
+
+
+    # Generating and sending OTP
+    def generate_and_send_otp(self, otp_type):
+        # set interval(time of the otp expiration) according to your need in seconds.
+        # totp = pyotp.TOTP(mfa_secret, interval=settings.OTP_EXPIRATION_TIME_IN_SECONDS)
+
+        email_counter_secret = random.randint(1000 , 9999)
+        # email otp
+        hotp = pyotp.HOTP(self.email_mfa_secret)
+        email_otp = hotp.at(email_counter_secret)
+        
+        #mobile otp
+        mobile_counter_secret = random.randint(1000 , 9999)
+        hotp = pyotp.HOTP(self.mobile_mfa_secret)
+        mobile_otp = hotp.at(mobile_counter_secret)
+        # Saving otp in db
+        # self.otp = otp
+        self.mobile_counter_secret = mobile_counter_secret
+        self.email_counter_secret = email_counter_secret
+        self.is_used = False
+        self.is_verified = False
+
+        # Sending OTP on email or mobile
+        response = send_otp(self, email_otp, mobile_otp, otp_type)
+
+        if response['is_sent']:
+            self.is_sent = response['is_sent']
+            self.sms_api_response = response
+        else:
+            self.is_sent = response['is_sent']
+            self.sms_api_response = response
+
+        self.save()
+        
+        return self
+
+
+    # verifying OTP
+    def verify_otp(self, email_otp, mobile_otp, otp_instance):
+        email_hotp = pyotp.HOTP(otp_instance.email_mfa_secret)
+        mobile_hotp = pyotp.HOTP(otp_instance.mobile_mfa_secret)
+        answer = email_hotp.verify(email_otp, otp_instance.email_counter_secret)
+        answer = mobile_hotp.verify(mobile_otp, otp_instance.mobile_counter_secret)
+
+        if self.is_otp_expired()['is_expired']:
+            answer = False
+
+        # Saving otp in db
+        self.is_used = True
+        self.save()
+        return answer
+
+
+    # otp checker if otp expired or not
+    def is_otp_expired(self):
+        data = {}
+        time_elapsed = timezone.now() - self.otp_created_at
+        left_time = timedelta(seconds=settings.OTP_EXPIRATION_TIME_IN_SECONDS) - time_elapsed
+
+        is_expired = False
+        if left_time < timedelta(seconds=0):
+            is_expired = True
+            data.update({'message':"OTP is expired!"})
+            
+        data.update({'is_expired': is_expired})
+
+        return data
+

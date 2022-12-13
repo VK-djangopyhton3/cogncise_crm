@@ -9,6 +9,7 @@ python-decouple
 drf-yasg[validation]
 django-phonenumber-field[phonenumbers]
 Pillow
+pyotp
 drf-flex-fields
 django-jazzmin
 Faker
