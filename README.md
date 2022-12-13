@@ -63,3 +63,19 @@ python3 manage.py loaddata crm_backend/fixtures/lead/leadstatus.json
 # lead sources
 python3 manage.py loaddata crm_backend/fixtures/lead/leadsource.json
 ```
+
+## Create/Load dummy data
+
+- `--table` argument accepts from following customers, leads and jobs
+- `--size` argument accepts integer value for number of records to create
+
+```bash
+# create or load customers data
+./manage.py db_seed_fake --table=customers --size=10
+
+# create or load leads data
+./manage.py db_seed_fake --table=leads --size=10
+
+# create or load jobs data
+./manage.py db_seed_fake --table=jobs --size=10
+```
