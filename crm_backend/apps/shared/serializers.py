@@ -5,6 +5,7 @@ from shared.models import Address
 # Address Serializer
 class AddressSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    purpose = serializers.CharField(required=False)
 
     class Meta:
         model = Address
