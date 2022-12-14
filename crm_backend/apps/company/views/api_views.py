@@ -16,6 +16,8 @@ class CompanyViewSet(CrudViewSet):
     serializer_class = CompanySerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
+
+    search_fields = ['first_name', 'last_name', 'email', 'mobile_number']
     
     def get_queryset(self):
         if self.request.user.is_cogncise is False:  # type: ignore
