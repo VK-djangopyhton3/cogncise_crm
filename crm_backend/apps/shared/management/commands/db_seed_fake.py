@@ -42,7 +42,10 @@ class Command(BaseCommand):
         customer.addresses.create(**address_data)
 
     def create_job(self, **kwargs):
-        user_data = { "company_id": kwargs.get('company_id', None) }
+        user_data = {
+            "company_id": kwargs.get('company_id', None),
+            "title": fake.text(100)
+        }
         job_data = self._user_data(**user_data)
         job_data.pop('username')
         property_address = self._address_data()
@@ -57,9 +60,10 @@ class Command(BaseCommand):
     def create_lead(self, **kwargs):
             lead_data = self._user_data()
             lead_data.update({
-                "status_id": randint(1,5),
-                "source_id": randint(1,2),
-                "owner_id": kwargs.get("owner_id", None),
+                "status_id":  randint(1,5),
+                "source_id":  randint(1,2),
+                "owner_id":   kwargs.get("owner_id", None),
+                "company_id": kwargs.get("company_id", None),
             })
             lead_data.pop('username')
             address_data = self._address_data()
@@ -69,10 +73,10 @@ class Command(BaseCommand):
 
     def _user_data(self, **kwargs):
         user = {
-            "first_name": fake.first_name(),
-            "last_name": fake.last_name(),
-            "email": fake.unique.ascii_free_email(),
-            "username": fake.user_name(),
+            "first_name":    fake.first_name(),
+            "last_name":     fake.last_name(),
+            "email":         fake.unique.ascii_free_email(),
+            "username":      fake.user_name(),
             "mobile_number": fake.numerify('9#########')
         }
         user.update(**kwargs)
@@ -80,18 +84,18 @@ class Command(BaseCommand):
 
     def _address_data(self, **kwargs):
         address = {
-            "building_number": fake.building_number(),
-            "level_number": fake.building_number(),
-            "unit_type": fake.building_number(),
-            "unit_number": fake.building_number(),
-            "lot_number": fake.building_number(),
-            "street_number": fake.building_number(),
-            "street_name": fake.street_name(),
-            "street_type": fake.building_number(),
-            "suffix": fake.suffix(),
-            "suburb": fake.state(),
-            "state": fake.state(),
-            "pincode": fake.zipcode()
+            "building_number":  fake.building_number(),
+            "level_number":     fake.building_number(),
+            "unit_type":        fake.building_number(),
+            "unit_number":      fake.building_number(),
+            "lot_number":       fake.building_number(),
+            "street_number":    fake.building_number(),
+            "street_name":      fake.street_name(),
+            "street_type":      fake.building_number(),
+            "suffix":           fake.suffix(),
+            "suburb":           fake.state(),
+            "state":            fake.state(),
+            "pincode":          fake.zipcode()
         }
         address.update(**kwargs)
         return address

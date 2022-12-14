@@ -1,9 +1,8 @@
 from common.common_serilizer_imports import *
 
 from core.models import User
-from core.serializers import UserSerializer
 from shared.serializers import AddressSerializer
-from company.models import Company
+from company.models import CompanyStatus, Company
 
 class OwnerSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(validators=[])
@@ -11,6 +10,12 @@ class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'mobile_number', 'is_company', 'is_cogncise', 'role']
+
+
+class CompanyStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model   = CompanyStatus
+        exclude = ['created_at', 'updated_at']
 
 
 class CompanySerializer(serializers.ModelSerializer):

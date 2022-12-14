@@ -7,5 +7,6 @@ router = routers.DefaultRouter()
 router.register(r'', CompanyViewSet, basename='company')
 
 urlpatterns = [
+    path('statuses/', CompanyStatusListAPIView.as_view(), name='statuses'),
     path('', include(router.urls)),
 ]
