@@ -171,6 +171,10 @@ class User(AbstractCUser, BaseModel):
     @property
     def role(self):
         return self.groups.last() and self.groups.last().id
+    
+    @property
+    def role_obj(self):
+        return self.groups.last() and self.groups.last()
 
     @property
     def role_name(self):

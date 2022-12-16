@@ -1,4 +1,5 @@
 from common.common_serilizer_imports import *
+from rest_flex_fields import FlexFieldsModelSerializer
 
 from core.models import User
 from shared.serializers import AddressSerializer
@@ -18,24 +19,28 @@ class CompanyStatusSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 
-class CompanySerializer(serializers.ModelSerializer):
+class CompanySerializer(FlexFieldsModelSerializer):
     address = AddressSerializer(many=False, allow_null=True, required=False)
     owner   = OwnerSerializer(many=False, required = False)
 
     class Meta:
         model   = Company
         exclude = ['created_at', 'updated_at']
+        expandable_fields = {
+            'status': (CompanyStatusSerializer, {'many': False, 'read_only': True})
+        }
 
     def create(self, validated_data):
         address = validated_data.pop('address')
         owner_data = validated_data.pop('owner')
+        company = None
         if owner_data is not None:
             owner = User.create_company_admin(**owner_data)
             company = Company.objects.create(owner=owner, **validated_data)
             owner.company = company
             owner.save()
         if address is not None:
-            company.addresses.create(**address)
+            company.addresses.create(**address) # type: ignore
 
         return company
 

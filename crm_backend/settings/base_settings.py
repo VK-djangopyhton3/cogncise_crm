@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     # Local apps,
     'core',
+    'users',
     'company',
     'shared',
     'lead',

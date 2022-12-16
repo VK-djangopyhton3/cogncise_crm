@@ -5,6 +5,18 @@ from shared.serializers import AddressSerializer, CompanyMixin
 from lead.models import LeadSource, LeadStatus, Lead
 from company.serializers import OwnerSerializer
 
+class LeadSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model   = LeadSource
+        exclude = ['created_at', 'updated_at']
+
+
+class ILeadStatusSerializer(FlexFieldsModelSerializer):
+    class Meta:
+        model   = LeadStatus
+        exclude = ['created_at', 'updated_at']
+
+
 class LeadSerializer(CompanyMixin, FlexFieldsModelSerializer):
     address = AddressSerializer(many=False)
     owner   = OwnerSerializer(read_only=True)
@@ -12,6 +24,10 @@ class LeadSerializer(CompanyMixin, FlexFieldsModelSerializer):
     class Meta:
         model = Lead
         fields = "__all__"
+        expandable_fields = {
+          'status': (ILeadStatusSerializer, {'many': False, 'read_only': True}),
+          'source': (LeadSourceSerializer, {'many': False, 'read_only': True})
+        }
 
     def create(self, validated_data):
         address = validated_data.pop('address')
@@ -31,12 +47,6 @@ class LeadSerializer(CompanyMixin, FlexFieldsModelSerializer):
             nested_serializer.update(nested_instance, address)
 
         return super().update(instance, validated_data)
-
-
-class LeadSourceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model   = LeadSource
-        exclude = ['created_at', 'updated_at']
 
 
 class LeadStatusSerializer(FlexFieldsModelSerializer):
