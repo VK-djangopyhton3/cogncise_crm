@@ -1,0 +1,90 @@
+[
+    {
+        "model": "appointment.worktype",
+        "pk": 1,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.608Z",
+            "updated_at": "2022-12-17T13:35:49.608Z",
+            "is_deleted": false,
+            "title": "CLU Assessment"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 2,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.617Z",
+            "updated_at": "2022-12-17T13:35:49.617Z",
+            "is_deleted": false,
+            "title": "Heat Pump Assessment"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 3,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.622Z",
+            "updated_at": "2022-12-17T13:35:49.622Z",
+            "is_deleted": false,
+            "title": "A/C Assessment"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 4,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.626Z",
+            "updated_at": "2022-12-17T13:35:49.626Z",
+            "is_deleted": false,
+            "title": "Heat Pump Lead (To External)"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 5,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.630Z",
+            "updated_at": "2022-12-17T13:35:49.630Z",
+            "is_deleted": false,
+            "title": "Cold Room Assessment"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 6,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.634Z",
+            "updated_at": "2022-12-17T13:35:49.634Z",
+            "is_deleted": false,
+            "title": "Sales Lead"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 7,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.638Z",
+            "updated_at": "2022-12-17T13:35:49.638Z",
+            "is_deleted": false,
+            "title": "CLU Assessment (35 Act)"
+        }
+    },
+    {
+        "model": "appointment.worktype",
+        "pk": 8,
+        "fields": {
+            "deleted_at": null,
+            "created_at": "2022-12-17T13:35:49.642Z",
+            "updated_at": "2022-12-17T13:35:49.642Z",
+            "is_deleted": false,
+            "title": "CLU Assessment (34 & 35 Act)"
+        }
+    }
+]
