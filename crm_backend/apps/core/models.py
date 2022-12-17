@@ -33,7 +33,7 @@ class Group(BaseGroup):
 
     @classmethod
     def customer(cls):
-        return cls.objects.filter(slug='cogncise-customer').last()
+        return cls.objects.filter(slug='customer').last()
 
     @classmethod
     def get_group_obj(cls, group_id):
@@ -198,13 +198,11 @@ class User(AbstractCUser, BaseModel):
 
     @classmethod
     def create_customer(cls, **kwargs):
-        kwargs.update({ 'is_company':True})
+        kwargs.update(kwargs.get('user', None))
+        kwargs.pop('user', None)
+        kwargs.update({'is_company': True, 'is_customer': True })
         if 'username' not in kwargs:
-            try:
-                kwargs.update({ 'username': kwargs['email'] })
-            except:
-                kwargs = kwargs['user']
-                kwargs.update({ 'username': kwargs['email'] })
+            kwargs.update({ 'username': kwargs['email'] })
         customer = cls.objects.create(**kwargs)
         role = Group.customer() and Group.customer().id
         customer.groups.add(role)

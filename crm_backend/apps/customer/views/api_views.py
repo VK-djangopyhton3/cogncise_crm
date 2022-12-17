@@ -1,16 +1,10 @@
 from common.common_view_imports import *
 
-from shared.views import CrudViewSet
+from shared.views import CrudViewSet, BulkDeleteAPIView
+from shared.serializers import BulkDeleteSerilizer
+
 from customer.models import Customer
 from customer.serializers import CustomerSerializer
-from shared.serializers import BulkDeleteSerilizer
-from shared.views import CrudViewSet, BulkDeleteAPIView
-
-# class CustomerViewSet(CrudViewSet):
-#     swagger_tag = ["customers"]
-#     queryset = Customer.objects.all()
-#     serializer_class = CustomerSerializer
-
 
 class CustomerViewSet(CrudViewSet):
     swagger_tag = ["customers"]
