@@ -14,11 +14,15 @@ import pyotp, random
 from datetime import timedelta
 
 from common.app_utils import profile_unique_upload
-from core.managers import UserManager as CustomeUserManager
+from core.managers import UserManager
 from core.abstract_models import BaseModel
 
 BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
 BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
+
+class CustomeUserManager(SoftDeleteManager, DeletedManager, UserManager):
+    pass
+
 
 class Group(BaseGroup):
 
@@ -145,8 +149,6 @@ class User(AbstractCUser, BaseModel):
 
     Password and email are required. Other fields are optional.
     """
-    objects = SoftDeleteManager()
-    deleted_objects = DeletedManager()
 
     created_by = models.ForeignKey('self', on_delete=models.CASCADE, related_name='user_created_by', null=True, blank=True)
     mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
