@@ -14,3 +14,4 @@ drf-flex-fields
 django-jazzmin
 Faker
 django-extensions
+django-soft-delete

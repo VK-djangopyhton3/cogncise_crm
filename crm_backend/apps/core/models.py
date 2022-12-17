@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from django_softdelete.models import SoftDeleteManager, DeletedManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 import pyotp, random
@@ -42,12 +43,6 @@ class Group(BaseGroup):
     @property
     def role_name(self):
         return self.__str__()
-
-    # def save(self, *args, **kwargs):
-    #     super(Group, self).save(*args, **kwargs)
-    #     if not self.slug:
-    #         self.slug = slugify(self.name)  # type: ignore
-    #         self.save()
 
     def __str__(self):
         return self.name
@@ -150,6 +145,9 @@ class User(AbstractCUser, BaseModel):
 
     Password and email are required. Other fields are optional.
     """
+    objects = SoftDeleteManager()
+    deleted_objects = DeletedManager()
+
     created_by = models.ForeignKey('self', on_delete=models.CASCADE, related_name='user_created_by', null=True, blank=True)
     mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
 
