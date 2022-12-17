@@ -50,6 +50,7 @@ api_urls = [
                 path('companies/<int:company_id>/users/',     include('users.urls.api_urls',    namespace='user')),
                 path('companies/<int:company_id>/leads/',     include('lead.urls.api_urls',    namespace='lead')),
                 path('companies/<int:company_id>/jobs/',      include('job.urls.api_urls',     namespace='job')),
+                path('companies/<int:company_id>/appointments/',     include('appointment.urls.api_urls',    namespace='appointment')),
                 path('companies/<int:company_id>/customers/', include('customer.urls.api_urls',    namespace='customer')),
                 path('',           include('core.urls.api_urls',    namespace='core')),
             ]

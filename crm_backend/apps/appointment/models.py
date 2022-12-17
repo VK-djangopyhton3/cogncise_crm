@@ -1,13 +1,9 @@
-import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.contenttypes.fields import GenericRelation
 
+from core.abstract_models import BaseModel
 from job.models import Job
-from shared.models import Address
-from core.abstract_models import BasicInformation, BaseModel
 from company.models import Company
-# Create your models here.
 
 class WorkType(BaseModel):
     title = models.CharField( _("title"), max_length=100)

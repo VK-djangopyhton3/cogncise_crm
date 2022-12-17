@@ -1,8 +1,13 @@
 from common.common_serilizer_imports import *
 
-from appointment.models import Appointment, SechduleAppointment, TimeSlots
+from appointment.models import WorkType, Appointment, SechduleAppointment, TimeSlots
 
-# Appointment Serializer
+class WorkTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkType
+        exclude = ['created_at', 'updated_at']
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
