@@ -27,11 +27,13 @@ class LeadViewSet(CrudViewSet):
     serializer_class = LeadSerializer
     search_fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company__name', 'company__abn']
     filterset_fields = {
-        'company':  ['in', 'exact'],
-        'source':   ['in', 'exact'],
-        'customer': ['in', 'exact'],
-        'owner':    ['in', 'exact'],
-        'status':   ['in', 'exact']
+        'company':    ['in', 'exact'],
+        'source':     ['in', 'exact'],
+        'customer':   ['in', 'exact'],
+        'owner':      ['in', 'exact'],
+        'status':     ['in', 'exact'],
+        'updated_at': ['in', 'exact', 'gte', 'lte'],
+        'created_at': ['in', 'exact', 'gte', 'lte'],
     }
 
 
