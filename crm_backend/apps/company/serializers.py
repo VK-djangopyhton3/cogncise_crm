@@ -11,12 +11,14 @@ class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'mobile_number', 'is_company', 'is_cogncise', 'role']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
 
 class CompanyStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model   = CompanyStatus
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
 
 class CompanySerializer(FlexFieldsModelSerializer):
@@ -26,6 +28,7 @@ class CompanySerializer(FlexFieldsModelSerializer):
     class Meta:
         model   = Company
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
         expandable_fields = {
             'status': (CompanyStatusSerializer, {'many': False, 'read_only': True})
         }

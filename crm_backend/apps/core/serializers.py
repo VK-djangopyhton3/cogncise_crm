@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["username", "role", "email", "first_name", "last_name", "mobile_number", "password", "is_company", "is_customer", "is_cogncise"]
-
+        read_only_fields = ['deleted_at', 'is_deleted']
         extra_kwargs = {"role": {"required": True}}
 
 
@@ -52,7 +52,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "mobile_number", "first_name", "last_name", "profile_pic", "role_name", "last_login"]
-        read_only_fields = ["id", "username", "email", "role_name", "last_login"]
+        read_only_fields = ["id", "username", "email", "role_name", "last_login", 'deleted_at', 'is_deleted']
 
 
 class ShowUserSerializer(serializers.ModelSerializer):

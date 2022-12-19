@@ -15,6 +15,7 @@ class UserSerializer(CompanyMixin, FlexFieldsModelSerializer):
     class Meta:
         model = User
         exclude = ['created_at', 'updated_at', 'groups', 'user_permissions']
+        read_only_fields = ['deleted_at', 'is_deleted']
         extra_kwargs = {"role": {"required": True}}
         expandable_fields = {
             'role': (GroupSerializer, {'many': False, 'read_only': True, 'source': 'role_obj'})

@@ -6,17 +6,20 @@ class WorkTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkType
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
 class TimeSlotsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeSlots
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
 
 class SechduleAppointmentSerializer(serializers.ModelSerializer):
@@ -25,6 +28,7 @@ class SechduleAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = SechduleAppointment
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
     # def create(self, validated_data):
     #     business_address = validated_data.pop('business_address')

@@ -5,12 +5,12 @@ from shared.models import Address
 # Address Serializer
 class AddressSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-    purpose = serializers.CharField(required=False)
+    purpose = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Address
         exclude = ['created_at', 'updated_at', 'object_id', 'content_type']
-        read_only_fields = ['content_object']
+        read_only_fields = ['deleted_at', 'is_deleted', 'content_object']
 
 
 class BulkDeleteSerilizer(serializers.Serializer):

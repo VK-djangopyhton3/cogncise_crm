@@ -11,6 +11,7 @@ class JobSerializer(CompanyMixin, serializers.ModelSerializer):
     class Meta:
         model = Job
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
     def create(self, validated_data):
         business_address = validated_data.pop('business_address')

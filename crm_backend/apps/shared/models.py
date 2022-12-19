@@ -18,7 +18,7 @@ class Address(BaseModel):
     suburb = models.CharField( _("suburb"), max_length=100, null=True, blank=True )
     state = models.CharField( _("state"), max_length=100)
     pincode = models.CharField( _("pincode"), max_length=10)
-    purpose = models.CharField(_("purpose"), max_length=100, null=True, blank=True)
+    purpose = models.CharField(_("purpose"), max_length=100, null=True, blank=True, default='self')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')

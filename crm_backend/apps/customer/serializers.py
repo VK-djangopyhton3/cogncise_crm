@@ -15,6 +15,7 @@ class CustomerSerializer(CompanyMixin, serializers.ModelSerializer):
     class Meta:
         model   = Customer
         exclude = ['created_at', 'updated_at', 'user']
+        read_only_fields = ['deleted_at', 'is_deleted']
 
     def create(self, validated_data):
         address = validated_data.pop('address')
