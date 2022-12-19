@@ -8,5 +8,6 @@ router.register(r'', CompanyViewSet, basename='company')
 
 urlpatterns = [
     path('statuses/', CompanyStatusListAPIView.as_view(), name='statuses'),
+    path('bulk-delete/', CompanyBulkDeleteAPIView.as_view(), name='company_bulk_delete'),
     path('', include(router.urls)),
 ]

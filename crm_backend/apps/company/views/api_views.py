@@ -27,7 +27,7 @@ class CompanyViewSet(CrudViewSet):
         return self.queryset
 
 
-class UsersBulkDeleteAPIView(BulkDeleteAPIView):
-    swagger_tag = ['users']
+class CompanyBulkDeleteAPIView(BulkDeleteAPIView):
+    swagger_tag = ['companies']
     queryset = Company.objects.all()
     serializer_class = BulkDeleteSerilizer
