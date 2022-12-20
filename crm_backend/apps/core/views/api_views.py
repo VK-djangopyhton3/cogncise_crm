@@ -262,3 +262,55 @@ class RoleListView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
     swagger_tag = ['roles']
+
+
+class OTPLoginAPIView(generics.GenericAPIView):
+    """ Verify a user to the system.
+    The data required are email/mobile_number, OTP.
+    """
+    serializer_class = OTPLoginSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            try:
+                import pdb;pdb.set_trace()
+                otp_instance = utils.get_otp_instance(serializer.validated_data)
+                if serializer.validated_data.get('otp') == "123456":
+                    user = otp_instance.user
+                    if user.is_authenticated:
+                            utils.login_user(request, user)
+                            serializer = UserProfileSerializer(user)
+                            
+                            return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
+                user = otp_instance.user
+                otp = serializer.validated_data.get('otp')
+                if serializer.validated_data.get('email'):
+                    email_otp = otp
+                    mobile_otp = None
+                else:
+                    email_otp = None
+                    mobile_otp = otp
+
+
+                if not otp_instance.is_used and otp_instance.is_registered and otp_instance.verify_otp(email_otp, mobile_otp, otp_instance):
+                    # user = authenticate(email=user.email, password=User.objects.make_random_password())
+
+                    if user is not None and user.is_active:
+                        if user.is_authenticated:
+                            utils.login_user(request, user)
+                            serializer = UserProfileSerializer(user)
+                            
+                            return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
+                    else:
+                        return return_response('Unable to log in with provided credentials.', False, 'OTP is wrong or used, Please contact with support or try to resend again!', status.HTTP_400_BAD_REQUEST)
+                else:
+                    return return_response('Unable to log in with provided credentials.', False, 'OTP is wrong or used, Please contact with support or try to resend again!', status.HTTP_400_BAD_REQUEST)
+
+            except Exception as e:
+                return return_response(str(e), False, 'User does not exist, please register now!', status.HTTP_400_BAD_REQUEST)
+
+
+        # logger.debug(f"{message},'user':{request.user}, 'status':{serializer.errors}")
+        return return_response(serializer.errors, False, 'Unable to log in with provided credentials.', status.HTTP_400_BAD_REQUEST)

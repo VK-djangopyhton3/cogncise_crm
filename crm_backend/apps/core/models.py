@@ -13,7 +13,7 @@ from django.conf import settings
 import pyotp, random
 from datetime import timedelta
 
-from common.app_utils import profile_unique_upload
+from common.app_utils import profile_unique_upload, send_otp
 from core.managers import UserManager
 from core.abstract_models import BaseModel
 
@@ -178,7 +178,7 @@ class User(AbstractCUser, BaseModel):
 
     @property
     def role_name(self):
-        return self.groups.last() and self.groups.last().name
+        return self.groups.last() and selfc.groups.last().name
 
     @classmethod
     def create_company_admin(cls, **kwargs):
