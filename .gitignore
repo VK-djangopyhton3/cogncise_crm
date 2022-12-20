@@ -135,6 +135,7 @@ dmypy.json
 !**/migrations/__init__.py
 
 *.ini
+!example.ini
 
 **/mediafiles/*
 !**/mediafiles/.keep

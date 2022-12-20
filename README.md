@@ -2,48 +2,67 @@
 
 ## Clone the project
 
-### Clone the project from Github:
-
-    Project Root Directory: `/var/www` Or any
-
-    git clone remote url
+```bash
+# navigate to project root directory: `/var/www` Or any other path
+git clone git@github.com:repository/name.git cogncise
+```
 
 ## Create Environment file
 
-    Go to the settings folder then create settings.ini or .env file
+```bash
+# navigate inside project directory
+cd cogncise
 
-    Note : Like see the example.ini file in project root folder, same veriable copy and paste in settings.ini file on settings folder then update env varible .
+# create a new environment file
+cp example.ini crm_backend/settings/settings.ini
+```
 
-## Virtual Environment Setup
+- Note : Replace the variable values as per your system or machine.
 
-### Create Virtualenv Folder
+## Setup Virtual Environment
 
-    virtualenv --python=python3.10 Project_dir/.venv
+```bash
+# create a new virtual environment by
+virtualenv --python=python3.10 .venv
+```
 
-### Backend python code
+### Setup Backend Code
 
-### Activate Environment:
+```bash
+# activate virtualenv
+source .venv/bin/activate
 
-    source project_venv/bin/activate
+# install dependencies
+pip install -r requirements.txt
 
-## Install dependencies:
+# build migrations
+python3 manage.py makemigrations
 
-    pip install -r requirements.txt
+# apply or migrate migrations
+python3 manage.py migrate
+```
 
-## Apply database migrations
+## Setup First User
 
-    python3 manage.py makemigrations
-    python3 manage.py migrate
+```bash
+# create a new superuser and fill the details as per prompted command
+python3 manage.py createsuperuser
+```
 
-## Create super user
-
-    python3 manage.py createsuperuser
-
-## Load & Dump base data
+## Dump & Load base data
 
 Dump Fixtures:
 
-    ./manage.py dumpdata core.group > crm_backend/fixtures/core/group.json
+```bash
+./manage.py dumpdata core.group > crm_backend/fixtures/core/group.json
+```
+
+Load complete dataset
+
+```bash
+# load default complete dataset
+python3 manage.py fixtures_load_dump
+```
 
 Load fixtures:
 
@@ -66,16 +85,21 @@ python3 manage.py loaddata crm_backend/fixtures/lead/leadsource.json
 
 ## Create/Load dummy data
 
-- `--table` argument accepts from following customers, leads and jobs
-- `--size` argument accepts integer value for number of records to create
+- `--table` &nbsp;&nbsp;
+  argument accepts from following customers, leads and jobs
+- `--size` &nbsp;&nbsp;&nbsp;&nbsp;
+  argument accepts integer value for number of records to create
 
 ```bash
+# create or load companies data
+./manage.py fixtures_load --table=companies --size=10
+
 # create or load customers data
-./manage.py db_seed_fake --table=customers --size=10
+./manage.py fixtures_load --table=customers --size=100
 
 # create or load leads data
-./manage.py db_seed_fake --table=leads --size=10
+./manage.py fixtures_load --table=leads --size=100
 
 # create or load jobs data
-./manage.py db_seed_fake --table=jobs --size=10
+./manage.py fixtures_load --table=jobs --size=100
 ```
