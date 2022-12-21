@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as StockGroup
 from django.utils.translation import gettext_lazy as _
 
-from core.models import User, Group
+from core.models import User, Group, OTPVerify
 from core.settings import CUSER_SETTINGS
 
 
@@ -38,7 +38,7 @@ if CUSER_SETTINGS['register_proxy_auth_group_model']:
     class GroupAdmin(BaseGroupAdmin):
         list_display = ['name', 'slug']
 
-
+admin.site.register(OTPVerify)
 # class RoleAdmin(admin.ModelAdmin):
 #     list_display = ['name', 'category', 'slug']
 
