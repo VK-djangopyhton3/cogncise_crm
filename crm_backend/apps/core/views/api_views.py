@@ -275,10 +275,10 @@ class OTPLoginAPIView(generics.GenericAPIView):
         if request.data['otp'] == "123456":
             user = User.objects.get(username="company-admin")
             if user.is_authenticated:
-                    utils.login_user(request, user)
-                    serializer = UserProfileSerializer(user)
-                    
-                    return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
+                utils.login_user(request, user)
+                serializer = ShowUserSerializer(user)
+                
+                return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
