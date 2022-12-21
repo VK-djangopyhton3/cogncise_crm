@@ -314,3 +314,38 @@ class OTPLoginAPIView(generics.GenericAPIView):
 
         # logger.debug(f"{message},'user':{request.user}, 'status':{serializer.errors}")
         return return_response(serializer.errors, False, 'Unable to log in with provided credentials.', status.HTTP_400_BAD_REQUEST)
+
+class SendOTPView(generics.GenericAPIView):
+    """ Send OTP for user verification, login with OTP
+    Verify a new user to the system.
+    The data required are email/mobile_number, mobile_number (optional).
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = SendOTPSerializer
+
+    def post(self, request, *agrs, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            if serializer.is_valid():
+                data = serializer.data
+                otp_instance = None
+
+                """Checking if user exist then update the status and data"""
+                otp_instance = utils.get_otp_instance(serializer.validated_data)
+
+                if otp_instance:
+                    if 'email' in data:
+                        otp_instance.login_otp_via_email = True
+                        otp_instance.save()
+                    else: 
+                        otp_instance.login_otp_via_email = False
+                        otp_instance.save()
+                    response = otp_instance.generate_and_send_otp(data.get('otp_type'))
+                    if response.is_sent:
+                        return return_response("OTP has been sent on your mobile number or email!", True, 'OTP has been sent on your mobile number or email, Please check your email or mobile!', status.HTTP_200_OK)
+                    else:
+                        return return_response(response.sms_api_response, False, 'Internal server issue, Please contact with support or try to resend again!', status.HTTP_400_BAD_REQUEST)
+
+            return return_response(serializer.errors, False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return return_response(str(e), False, 'Bad request!', status.HTTP_400_BAD_REQUEST)
