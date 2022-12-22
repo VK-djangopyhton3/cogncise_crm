@@ -43,6 +43,10 @@ class ScheduleAppointment(BaseModel):
 
     def __str__(self):
         return f"{self.appointment.job.title}"
+    
+    @property
+    def time_slots(self):
+        return self.schedule_appointment.all() # type: ignore
 
 
 class TimeSlots(BaseModel):
@@ -54,4 +58,4 @@ class TimeSlots(BaseModel):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.schedule_appointment.appointment.job.title}"
+        return f"{self.schedule_appointment.appointment.job.title}" # type: ignore

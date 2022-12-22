@@ -5,7 +5,7 @@ from appointment.views.api_views import *
 
 app_name='appointment'
 router = routers.DefaultRouter()
-router.register(r'schedule', ScheduleAppointmentViewSet, basename ='schedule_appointment' )
+router.register(r'schedule', SechduleAppointmentViewSet, basename ='schedule_appointment' )
 router.register(r'', AppointmentViewSet, basename='appointment')
 
 urlpatterns = [
