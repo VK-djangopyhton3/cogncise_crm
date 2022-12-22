@@ -23,25 +23,21 @@ class TimeSlotsSerializer(serializers.ModelSerializer):
 
 
 class SechduleAppointmentSerializer(serializers.ModelSerializer):
-    time_slots = TimeSlotsSerializer()
+    time_slots = TimeSlotsSerializer(many=True)
 
     class Meta:
         model = SechduleAppointment
         exclude = ['created_at', 'updated_at']
         read_only_fields = ['deleted_at', 'is_deleted']
 
-    # def create(self, validated_data):
-    #     business_address = validated_data.pop('business_address')
-    #     property_address = validated_data.pop('property_address')
-    #     SechduleAppointment = SechduleAppointment.objects.create(**validated_data)
-    #     if business_address:
-    #         business_address.update({ 'purpose': 'business' })
-    #         SechduleAppointment.addresses.create(**business_address)
-    #     if property_address:
-    #         property_address.update({ 'purpose': 'property' })
-    #         SechduleAppointment.addresses.create(**property_address)
+    def create(self, validated_data):
+        time_slots = validated_data.pop('time_slots')
+        time_slots_serializer = self.fields.pop('time_slots')
+        sechdule_appointment = SechduleAppointment.objects.create(**validated_data)
+        for data in time_slots:
+            TimeSlots.objects.create(sechdule_appointment=sechdule_appointment, **data)
 
-    #     return SechduleAppointment
+        return sechdule_appointment
 
     # def update(self, instance, validated_data):
     #     business_address = validated_data.pop('business_address', None)

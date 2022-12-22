@@ -46,7 +46,7 @@ class SechduleAppointment(BaseModel):
 
 
 class TimeSlots(BaseModel):
-    sechdule_appointment  = models.ForeignKey(SechduleAppointment, related_name="sechdule_appointment",   on_delete=models.CASCADE)
+    sechdule_appointment  = models.ForeignKey(SechduleAppointment, related_name="sechdule_appointment",   on_delete=models.CASCADE, null=True, blank=True)
     in_time = models.BigIntegerField(_("in time"), null=True, blank=True)
     out_time = models.BigIntegerField(_("out time"), null=True, blank=True)
 

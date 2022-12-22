@@ -5,8 +5,8 @@ from appointment.views.api_views import *
 
 app_name='appointment'
 router = routers.DefaultRouter()
-router.register(r'', AppointmentViewSet, basename='appointment')
 router.register(r'sechdule', SechduleAppointmentViewSet, basename ='sechdule_appointment' )
+router.register(r'', AppointmentViewSet, basename='appointment')
 
 urlpatterns = [
     path('work-types/', WorkTypeListAPIView.as_view(), name='appointment_work_types'),
