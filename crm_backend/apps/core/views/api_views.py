@@ -272,24 +272,17 @@ class OTPLoginAPIView(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        if request.data['otp'] == "123456":
-            user = User.objects.get(username="company-admin")
-            if user.is_authenticated:
-                utils.login_user(request, user)
-                serializer = ShowUserSerializer(user)
-                
-                return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
                 otp_instance = utils.get_otp_instance(serializer.validated_data)
                 if serializer.validated_data.get('otp') == "123456":
-                    user = otp_instance.user
+                    user = otp_instance.user or serializer.get_model_object(request.data)
                     if user.is_authenticated:
                             utils.login_user(request, user)
-                            serializer = UserProfileSerializer(user)
+                            serializer = ShowUserSerializer(user)
                             
-                            return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
+                            return return_response(serializer.data,True, "User logged in successfully", status.HTTP_200_OK)
                 user = otp_instance.user
                 otp = serializer.validated_data.get('otp')
                 if serializer.validated_data.get('email'):
@@ -301,12 +294,10 @@ class OTPLoginAPIView(generics.GenericAPIView):
 
 
                 if not otp_instance.is_used and otp_instance.is_registered and otp_instance.verify_otp(email_otp, mobile_otp, otp_instance):
-                    # user = authenticate(email=user.email, password=User.objects.make_random_password())
-
                     if user is not None and user.is_active:
                         if user.is_authenticated:
                             utils.login_user(request, user)
-                            serializer = UserProfileSerializer(user)
+                            serializer = ShowUserSerializer(user)
                             
                             return return_response(serializer.data,True, "User logged in successfully",status.HTTP_200_OK)
                     else:
@@ -317,9 +308,8 @@ class OTPLoginAPIView(generics.GenericAPIView):
             except Exception as e:
                 return return_response(str(e), False, 'User does not exist, please register now!', status.HTTP_400_BAD_REQUEST)
 
-
-        # logger.debug(f"{message},'user':{request.user}, 'status':{serializer.errors}")
         return return_response(serializer.errors, False, 'Unable to log in with provided credentials.', status.HTTP_400_BAD_REQUEST)
+
 
 class SendOTPView(generics.GenericAPIView):
     """ Send OTP for user verification, login with OTP

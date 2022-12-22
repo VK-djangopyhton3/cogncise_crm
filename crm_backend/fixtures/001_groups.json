@@ -6,6 +6,7 @@
             "name": "Cogncise Admin",
             "description": "Cogncise Admin",
             "slug": "cogncise-admin",
+            "group_type": "admin",
             "permissions": []
         }
     },
@@ -16,6 +17,7 @@
             "name": "Cogncise Staff",
             "description": "Cogncise Staff",
             "slug": "cogncise-staff",
+            "group_type": "staff",
             "permissions": []
         }
     },
@@ -26,6 +28,7 @@
             "name": "Cogncise Auditor",
             "description": "Cogncise Auditor",
             "slug": "cogncise-auditor",
+            "group_type": "auditor",
             "permissions": []
         }
     },
@@ -36,6 +39,7 @@
             "name": "Cogncise Field Worker",
             "description": "Cogncise Field Worker",
             "slug": "cogncise-field-worker",
+            "group_type": "field_worker",
             "permissions": []
         }
     },
@@ -46,6 +50,7 @@
             "name": "Company Admin",
             "description": "Company Admin",
             "slug": "company-admin",
+            "group_type": "admin",
             "permissions": []
         }
     },
@@ -56,6 +61,7 @@
             "name": "Company Staff",
             "description": "Company Staff",
             "slug": "company-staff",
+            "group_type": "staff",
             "permissions": []
         }
     },
@@ -66,6 +72,7 @@
             "name": "Company Auditor",
             "description": "Company Auditor",
             "slug": "company-auditor",
+            "group_type": "auditor",
             "permissions": []
         }
     },
@@ -76,6 +83,7 @@
             "name": "Company Field Worker",
             "description": "Company Field Worker",
             "slug": "company-field-worker",
+            "group_type": "field_worker",
             "permissions": []
         }
     },
@@ -86,6 +94,7 @@
             "name": "Customer",
             "description": "Cogncise Customer",
             "slug": "customer",
+            "group_type": "customer",
             "permissions": []
         }
     }

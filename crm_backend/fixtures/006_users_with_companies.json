@@ -7,11 +7,13 @@
             "email": "cogncise-admin@example.com",
             "first_name": "Cogncise",
             "last_name": "Admin",
+            "mobile_number": "+61485872892",
             "password": "pbkdf2_sha256$390000$hfTBPF6QbUMZU5dahIucKK$IeUdIJFXQqKNSo+/snhFjdOzdsEHjthveK3jYNsLQq0=",
             "is_superuser": false,
             "is_company": true,
             "is_cogncise": true,
             "is_active": true,
+            "role_type": "admin",
             "groups": [
                 1
             ],
@@ -28,11 +30,13 @@
             "email": "company-admin@example.com",
             "first_name": "Company",
             "last_name": "Admin",
+            "mobile_number": "+61405328522",
             "password": "pbkdf2_sha256$390000$hfTBPF6QbUMZU5dahIucKK$IeUdIJFXQqKNSo+/snhFjdOzdsEHjthveK3jYNsLQq0=",
             "is_superuser": false,
             "is_company": true,
             "is_cogncise": false,
             "is_active": true,
+            "role_type": "admin",
             "groups": [
                 4
             ],

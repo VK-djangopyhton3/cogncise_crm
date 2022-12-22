@@ -44,7 +44,7 @@ class Command(BaseCommand):
             "last_name":     fake.last_name(),
             "email":         fake.unique.ascii_free_email(),
             "username":      fake.user_name(),
-            "mobile_number": fake.numerify('+919#########')
+            "mobile_number": fake.numerify('+61#########')
         }
         user.update(**kwargs)
         return user
@@ -70,7 +70,7 @@ class Command(BaseCommand):
 
     # create a new customer record
     def create_customer(self, **kwargs):
-        user_data = { "is_customer": True, "company_id": kwargs.get('company_id', None) }
+        user_data = { "is_customer": True, "company_id": kwargs.get('company_id', None), "role_type": "customer" }
         user_data = self._user_data(**user_data)
         address_data = self._address_data()
 
@@ -113,12 +113,12 @@ class Command(BaseCommand):
     # create a new company record
     def create_company(self, **kwargs):
         email = fake.unique.ascii_free_email()
-        owner_data = self._user_data(**{'email': email})
+        owner_data = self._user_data(**{'email': email, 'role_type': 'admin'})
         company_data = {
-            "name": fake.company().replace('-', ' '),
+            "name": fake.company().replace('-', ' ')[:30],
             "abn": fake.bothify(text='###########'),
             "email": email,
-            "mobile_number": fake.numerify('+91##########'),
+            "mobile_number": fake.numerify('+61#########'),
             "status_id": 1
         }
         owner = User.create_company_admin(**owner_data)

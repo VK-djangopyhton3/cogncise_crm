@@ -17,14 +17,23 @@ from common.app_utils import profile_unique_upload, send_otp
 from core.managers import UserManager
 from core.abstract_models import BaseModel
 
+ROLE_TYPES = (
+    ('admin', 'admin'),
+    ('staff', 'staff'),
+    ('auditor', 'auditor'),
+    ('field_worker', 'field_worker'),
+    ('customer', 'customer'),
+)
+
 BaseGroup.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
 BaseGroup.add_to_class('slug', models.SlugField(max_length=50, unique=True, null=True, editable=False))
+BaseGroup.add_to_class('group_type', models.CharField(max_length = 20, choices = ROLE_TYPES, null=True, blank=True))
 
 class CustomeUserManager(SoftDeleteManager, DeletedManager, UserManager):
     pass
 
 
-class Group(BaseGroup):
+class Group(BaseGroup):    
 
     class Meta:
         verbose_name = _('group')
@@ -150,8 +159,9 @@ class User(AbstractCUser, BaseModel):
     Password and email are required. Other fields are optional.
     """
 
+    role_type = models.CharField(max_length = 20, choices = ROLE_TYPES, null=True, blank=True)
     created_by = models.ForeignKey('self', on_delete=models.CASCADE, related_name='user_created_by', null=True, blank=True)
-    mobile_number = PhoneNumberField(_('mobile number'), blank=True, null=True)
+    mobile_number = PhoneNumberField(_('mobile number'), unique=True, blank=True, null=True)
 
     is_company = models.BooleanField(_('Company User'), default=False, help_text=_('Designates whether this user should be treated as company user. '), )
     is_customer = models.BooleanField(_('Customer User'), default=False, help_text=_('Designates whether this user should be treated as customer user. '), )
@@ -179,6 +189,10 @@ class User(AbstractCUser, BaseModel):
     @property
     def role_name(self):
         return self.groups.last() and self.groups.last().name
+
+    @classmethod
+    def filter_by_role_type(cls, role_type, **kwargs):
+        return cls.objects.filter(role_type=role_type, **kwargs)
 
     @classmethod
     def create_company_admin(cls, **kwargs):
