@@ -1,6 +1,6 @@
 from common.common_serilizer_imports import *
 
-from appointment.models import WorkType, Appointment, SechduleAppointment, TimeSlots
+from appointment.models import WorkType, Appointment, ScheduleAppointment, TimeSlots
 
 class WorkTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,22 +22,22 @@ class TimeSlotsSerializer(serializers.ModelSerializer):
         read_only_fields = ['deleted_at', 'is_deleted']
 
 
-class SechduleAppointmentSerializer(serializers.ModelSerializer):
+class scheduleAppointmentSerializer(serializers.ModelSerializer):
     time_slots = TimeSlotsSerializer(many=True)
 
     class Meta:
-        model = SechduleAppointment
+        model = ScheduleAppointment
         exclude = ['created_at', 'updated_at']
         read_only_fields = ['deleted_at', 'is_deleted']
 
     def create(self, validated_data):
         time_slots = validated_data.pop('time_slots')
         time_slots_serializer = self.fields.pop('time_slots')
-        sechdule_appointment = SechduleAppointment.objects.create(**validated_data)
+        schedule_appointment = ScheduleAppointment.objects.create(**validated_data)
         for data in time_slots:
-            TimeSlots.objects.create(sechdule_appointment=sechdule_appointment, **data)
+            TimeSlots.objects.create(schedule_appointment=schedule_appointment, **data)
 
-        return sechdule_appointment
+        return schedule_appointment
 
     # def update(self, instance, validated_data):
     #     business_address = validated_data.pop('business_address', None)

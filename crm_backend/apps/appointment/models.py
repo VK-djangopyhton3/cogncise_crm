@@ -28,7 +28,7 @@ class Appointment(BaseModel):
         return f"{self.job.title}"
 
 
-class SechduleAppointment(BaseModel):
+class ScheduleAppointment(BaseModel):
     appointment  = models.ForeignKey(Appointment, related_name="appointment",   on_delete=models.CASCADE)
     start_date = models.DateField(_("Start Date"), null=True, blank=True)
     end_date = models.DateField(_("End Date"), null=True, blank=True)
@@ -46,7 +46,7 @@ class SechduleAppointment(BaseModel):
 
 
 class TimeSlots(BaseModel):
-    sechdule_appointment  = models.ForeignKey(SechduleAppointment, related_name="sechdule_appointment",   on_delete=models.CASCADE, null=True, blank=True)
+    schedule_appointment  = models.ForeignKey(ScheduleAppointment, related_name="schedule_appointment",   on_delete=models.CASCADE, null=True, blank=True)
     in_time = models.BigIntegerField(_("in time"), null=True, blank=True)
     out_time = models.BigIntegerField(_("out time"), null=True, blank=True)
 
@@ -54,4 +54,4 @@ class TimeSlots(BaseModel):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.sechdule_appointment.appointment.job.title}"
+        return f"{self.schedule_appointment.appointment.job.title}"

@@ -1,8 +1,8 @@
 from common.common_view_imports import *
 
 from shared.views import CrudViewSet
-from appointment.models import WorkType, Appointment, SechduleAppointment
-from appointment.serializers import WorkTypeSerializer, AppointmentSerializer, SechduleAppointmentSerializer
+from appointment.models import WorkType, Appointment, ScheduleAppointment
+from appointment.serializers import WorkTypeSerializer, AppointmentSerializer, scheduleAppointmentSerializer
 
 class WorkTypeListAPIView(generics.ListAPIView):
     swagger_tag = ["appointment work types"]
@@ -18,9 +18,9 @@ class AppointmentViewSet(CrudViewSet):
     serializer_class = AppointmentSerializer
 
 
-class SechduleAppointmentViewSet(CrudViewSet):
-    queryset = SechduleAppointment.objects.all()
-    serializer_class = SechduleAppointmentSerializer
+class ScheduleAppointmentViewSet(CrudViewSet):
+    queryset = ScheduleAppointment.objects.all()
+    serializer_class = scheduleAppointmentSerializer
     # authentication_classes = [TokenAuthentication, SessionAuthentication]
     # permission_classes = [IsAuthenticated]
 
