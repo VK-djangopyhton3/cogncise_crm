@@ -36,7 +36,8 @@ class SechduleAppointment(BaseModel):
     lead_route_distance = models.BooleanField( _("Lead Route Distance"), default=False)
     ineligible_suburbs = models.BooleanField( _("Ineligible Suburbs"), default=False)
     all_agents = models.BooleanField( _("All Agents"), default=False)
-    
+    waiting_list = models.BooleanField( _("Waiting List"), default=True)
+
     class Meta:
         ordering = ['-created_at']
 
