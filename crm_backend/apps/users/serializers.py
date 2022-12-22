@@ -14,26 +14,23 @@ class UserSerializer(CompanyMixin, FlexFieldsModelSerializer):
 
     class Meta:
         model = User
-        exclude = ['created_at', 'updated_at', 'groups', 'user_permissions']
+        exclude = ['created_at', 'updated_at', 'groups', 'user_permissions', 'companies']
         read_only_fields = ['deleted_at', 'is_deleted']
         extra_kwargs = {"role": {"required": True}}
         expandable_fields = {
             'role': (GroupSerializer, {'many': False, 'read_only': True, 'source': 'role_obj'})
         }
-
+        
     def create(self, validated_data):
         password = validated_data.pop('password')
         role = validated_data.pop('role', None)
         if self.company:
             owner = self.company.owner
             validated_data.update({'is_company': owner.is_company, 'is_cogncise': owner.is_cogncise})
-        user = User.objects.create(company=self.company, **validated_data)
+        user = User.objects.create(**validated_data)
+        user.companies.add(self.company) # type: ignore
         user.set_password(password)
-        if role is not None:
-            group = Group.objects.get(id=role)
-            user.groups.add(group) # type: ignore
-            if group and group.slug == 'customer': # type: ignore
-                user.is_customer = True # type: ignore
+        user.groups.add(role) # type: ignore
         user.save()
         return user
     

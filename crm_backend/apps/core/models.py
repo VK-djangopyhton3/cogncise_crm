@@ -169,7 +169,7 @@ class User(AbstractCUser, BaseModel):
 
     profile_pic = models.ImageField(upload_to=profile_unique_upload, null=True, blank=True)
     
-    company   = models.ForeignKey('company.Company', related_name="user_company", on_delete=models.CASCADE, null=True, blank=True)
+    companies = models.ManyToManyField('company.Company', 'user_company')
 
     class Meta(AbstractCUser.Meta):
         swappable = 'AUTH_USER_MODEL'
@@ -177,6 +177,16 @@ class User(AbstractCUser, BaseModel):
 
     def __str__(self):
         return self.username
+
+    @property
+    def company(self):
+        if not (self.is_customer and self.role_type == 'customer'):
+            return self.companies.first()
+        return None
+    
+    @property
+    def company_id(self):
+        return self.company and self.company.id or None
 
     @property
     def role(self):
@@ -320,4 +330,3 @@ class OTPVerify(BaseModel):
         data.update({'is_expired': is_expired})
 
         return data
-

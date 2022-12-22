@@ -10,11 +10,11 @@ class CustomerViewSet(CrudViewSet):
     swagger_tag = ["customers"]
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    search_fields = ['user__first_name', 'user__last_name', 'user__email', 'user__mobile_number']
-    filterset_fields = {
-        'company':  ['in', 'exact'],
-        'user': ['in', 'exact'],
-    }
+    search_fields = ['first_name', 'last_name', 'email', 'mobile_number']
+    
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(companies=self.company)  # type: ignore
+        return self.queryset
 
 
 class CustomersBulkDeleteAPIView(BulkDeleteAPIView):

@@ -6,25 +6,19 @@ from shared.serializers import AddressSerializer, CompanyMixin
 from customer.models import Customer
 
 class CustomerSerializer(CompanyMixin, serializers.ModelSerializer):
-    first_name    = serializers.CharField(required=True, max_length=100, source="user.first_name")
-    last_name     = serializers.CharField(required=True, max_length=100, source="user.last_name")
-    email         = serializers.EmailField(required=True, source="user.email")
-    mobile_number = serializers.CharField(required=True, max_length=13, source="user.mobile_number")
-    address       = AddressSerializer(many=False)
+    email = serializers.EmailField(validators=[])
+    mobile_number = serializers.CharField(max_length=13)
+    address = AddressSerializer(many=False)
 
     class Meta:
         model   = Customer
-        exclude = ['created_at', 'updated_at', 'user']
+        exclude = ['created_at', 'updated_at', 'username', 'password', 'last_login', 'is_staff', 'is_active', 'date_joined', 'is_company', 'is_customer', 'is_cogncise', 'is_superuser', 'companies', 'user_permissions', 'groups']
         read_only_fields = ['deleted_at', 'is_deleted']
 
     def create(self, validated_data):
         address = validated_data.pop('address')
-        if self.company.owner is not None:
-            owner = self.company.owner
-            if owner.is_cogncise:
-                validated_data['user'].update({ 'is_cogncise': True, 'company_id': self.company.id })
-        user = User.create_customer(**validated_data)
-        customer = Customer.objects.create(company=self.company, user=user)
+        customer = Customer.create_record(**validated_data)
+        customer.companies.add(self.company)
         # create address
         if address is not None:
             customer.addresses.create(**address)
@@ -38,18 +32,5 @@ class CustomerSerializer(CompanyMixin, serializers.ModelSerializer):
             nested_serializer = self.fields['address']
             nested_instance = instance.address
             nested_serializer.update(nested_instance, address)
-        # update user
-        if validated_data is not None:
-            user_data = validated_data['user']
-            User.objects.filter(id=instance.user_id).update(**user_data)
 
-        return super().update(instance, {})
-
-    def validate_email(self, value):
-        if self.instance and User.objects.filter(email=value).exclude(id__in=[self.instance.user_id]).exists():
-            raise serializers.ValidationError("This field must be unique.")
-
-        if self.instance is None and User.objects.filter(email=value).exists():
-                raise serializers.ValidationError("This field must be unique.")
-
-        return value
+        return super().update(instance, validated_data)
