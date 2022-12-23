@@ -70,12 +70,12 @@ class Command(BaseCommand):
 
     # create a new customer record
     def create_customer(self, **kwargs):
-        user_data = { "is_customer": True, "company_id": kwargs.get('company_id', None), "role_type": "customer" }
-        user_data = self._user_data(**user_data)
+        customer_data = { 'role_type': 'customer', 'is_customer': True }
+        customer_data = self._user_data(**customer_data)
         address_data = self._address_data()
 
-        user = User.objects.create(**user_data)
-        customer = Customer.objects.create(user=user, company_id=kwargs.get('company_id', None))
+        customer = Customer.objects.create(**customer_data)
+        customer.companies.add( kwargs.get('company_id', None))
         customer.addresses.create(**address_data)
 
     # create a new job record
@@ -113,7 +113,7 @@ class Command(BaseCommand):
     # create a new company record
     def create_company(self, **kwargs):
         email = fake.unique.ascii_free_email()
-        owner_data = self._user_data(**{'email': email, 'role_type': 'admin'})
+        owner_data = self._user_data(**{ 'email': email, 'role_type': 'admin' })
         company_data = {
             "name": fake.company().replace('-', ' ')[:30],
             "abn": fake.bothify(text='###########'),
@@ -123,6 +123,6 @@ class Command(BaseCommand):
         }
         owner = User.create_company_admin(**owner_data)
         company = Company.objects.create(owner=owner, **company_data)
-        owner.company = company
+        owner.companies.add(company)
         owner.save()
         company.addresses.create(**self._address_data())
