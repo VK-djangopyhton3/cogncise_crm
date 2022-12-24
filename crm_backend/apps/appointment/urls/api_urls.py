@@ -10,5 +10,6 @@ router.register(r'', AppointmentViewSet, basename='appointment')
 
 urlpatterns = [
     path('work-types/', WorkTypeListAPIView.as_view(), name='appointment_work_types'),
+    path('appointment-status/', AppointmentStatusAPIView.as_view(), name='appointment_status'),
     path('', include(router.urls)),
 ]

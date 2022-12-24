@@ -7,5 +7,6 @@ router = routers.DefaultRouter()
 router.register(r'', JobViewSet, basename='job')
 
 urlpatterns = [
+    path('job-status/', JobStatusListAPIView.as_view(), name='job_status'),
     path('', include(router.urls)),
 ]

@@ -1,8 +1,14 @@
 from common.common_serilizer_imports import *
 
 from shared.serializers import AddressSerializer, CompanyMixin
-from job.models import Job
+from job.models import Job, JobStatus
 
+class JobStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobStatus
+        exclude = ['created_at', 'updated_at']
+        read_only_fields = ['deleted_at', 'is_deleted']
+        
 # Job Serializer
 class JobSerializer(CompanyMixin, serializers.ModelSerializer):
     business_address = AddressSerializer(many=False)
