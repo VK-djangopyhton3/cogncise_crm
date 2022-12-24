@@ -29,7 +29,7 @@ class AppointmentStatus(BaseModel):
         return f"{self.title}"
 
 class Appointment(BaseModel):
-    assessment_by = models.CharField(max_length=10, choices=ASSESSMENT_BY, default='field_worker')
+    assessment_by = models.CharField(max_length=15, choices=ASSESSMENT_BY, default='field_worker')
     work_type  = models.ForeignKey(WorkType, related_name="work_type",   on_delete=models.CASCADE)
     apointment_status  = models.ForeignKey(AppointmentStatus, related_name="apointment_status",   on_delete=models.CASCADE,  null=True, blank=True)
     job  = models.ForeignKey(Job, related_name="job_apointment",   on_delete=models.CASCADE)
