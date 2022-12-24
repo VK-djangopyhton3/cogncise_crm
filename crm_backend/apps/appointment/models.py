@@ -6,8 +6,8 @@ from job.models import Job
 from company.models import Company
 
 ASSESSMENT_BY = (
-    (1,'FIELD WORKER'),
-    (2, 'CUSTOMER'),
+    ('field_worker','FIELD WORKER'),
+    ('customer', 'CUSTOMER'),
 )
 
 class WorkType(BaseModel):
@@ -19,10 +19,19 @@ class WorkType(BaseModel):
     def __str__(self):
         return f"{self.title}"
 
+class AppointmentStatus(BaseModel):
+    title = models.CharField( _("title"), max_length=100)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.title}"
 
 class Appointment(BaseModel):
-    assessment_by = models.PositiveIntegerField(choices=ASSESSMENT_BY, default=1)
+    assessment_by = models.CharField(max_length=10, choices=ASSESSMENT_BY, default='field_worker')
     work_type  = models.ForeignKey(WorkType, related_name="work_type",   on_delete=models.CASCADE)
+    apointment_status  = models.ForeignKey(AppointmentStatus, related_name="apointment_status",   on_delete=models.CASCADE,  null=True, blank=True)
     job  = models.ForeignKey(Job, related_name="job_apointment",   on_delete=models.CASCADE)
     instruction = models.CharField( _("instruction"), max_length=100)
     company = models.ForeignKey(Company, related_name="appointment_company", on_delete=models.CASCADE, null=True, blank=True)

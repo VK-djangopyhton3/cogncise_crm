@@ -5,12 +5,23 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from shared.models import Address
 from company.models import Company
-from core.abstract_models import BasicInformation
+from core.abstract_models import BasicInformation, BaseModel
 
+
+class JobStatus(BaseModel):
+    title = models.CharField( _("title"), max_length=100)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.title}"
+    
 class Job(BasicInformation):
     title = models.CharField( _("title"),  max_length=100)
     addresses = GenericRelation(Address,   related_query_name='job')
     company   = models.ForeignKey(Company, related_name="job_company", on_delete=models.CASCADE, null=True, blank=True)
+    job_status  = models.ForeignKey(JobStatus, related_name="job_status",   on_delete=models.CASCADE,  null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']

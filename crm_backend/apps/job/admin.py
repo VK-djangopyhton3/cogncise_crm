@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline
 
 from shared.models import Address
-from job.models import Job
+from job.models import Job, JobStatus
 
 # Register your models here.
 
@@ -15,5 +15,6 @@ class JobAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Job, JobAdmin)
+admin.site.register(JobStatus)
 
 
