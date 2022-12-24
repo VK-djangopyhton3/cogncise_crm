@@ -19,6 +19,9 @@ class CompanyViewSet(CrudViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
     search_fields = ['name', 'abn', 'email', 'mobile_number']
+    filterset_fields = {
+        'status':     ['in', 'exact']
+    }
 
     
     def get_queryset(self):
