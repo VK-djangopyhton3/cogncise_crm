@@ -1,6 +1,6 @@
 from common.common_serilizer_imports import *
 from rest_flex_fields import FlexFieldsModelSerializer
-
+from shared.serializers import AddressSerializer, CompanyMixin
 from appointment.models import WorkType, Appointment, ScheduleAppointment, TimeSlots
 
 class WorkTypeSerializer(serializers.ModelSerializer):
@@ -10,11 +10,17 @@ class WorkTypeSerializer(serializers.ModelSerializer):
         read_only_fields = ['deleted_at', 'is_deleted']
 
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(CompanyMixin, FlexFieldsModelSerializer):
     class Meta:
         model = Appointment
         exclude = ['created_at', 'updated_at']
         read_only_fields = ['deleted_at', 'is_deleted']
+    
+    def create(self, validated_data):     
+        validated_data.update(company=self.company) 
+        appointment = Appointment.objects.create(**validated_data)
+        return appointment
+    
 
 class TimeSlotsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
