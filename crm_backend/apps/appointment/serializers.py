@@ -21,7 +21,11 @@ class AppointmentSerializer(CompanyMixin, FlexFieldsModelSerializer):
         model = Appointment
         exclude = ['created_at', 'updated_at']
         read_only_fields = ['deleted_at', 'is_deleted']
-    
+        
+        expandable_fields = {
+          'job': (JobSerializer, {'many': False, 'read_only': True}),
+        }
+
     def create(self, validated_data):
         validated_data.update(company=self.company) 
         appointment = Appointment.objects.create(**validated_data)
@@ -30,7 +34,8 @@ class AppointmentSerializer(CompanyMixin, FlexFieldsModelSerializer):
         expandable_fields = {
             'job': (JobSerializer, {'many': False, 'read_only': True}),
             'work_type':(WorkTypeSerializer, {'many': False, 'read_only': True})
-            }
+        }
+
 
 class TimeSlotsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
