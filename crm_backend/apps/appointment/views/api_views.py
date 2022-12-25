@@ -22,6 +22,9 @@ class AppointmentViewSet(CrudViewSet):
     swagger_tag = ["appointments"]
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
+    filterset_fields = {
+        'job': ['in', 'exact']
+    }
 
 
 # class SechduleAppointmentViewSet(CrudViewSet):

@@ -275,8 +275,8 @@ class OTPLoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
-                otp_instance = utils.get_otp_instance(serializer.validated_data)
                 if serializer.validated_data.get('otp') == "123456":
+                    otp_instance = utils.get_otp_instance(serializer.validated_data)
                     user = otp_instance.user or serializer.get_model_object(request.data)
                     if user.is_authenticated:
                             utils.login_user(request, user)
