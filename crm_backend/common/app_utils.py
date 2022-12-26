@@ -63,7 +63,7 @@ def send_otp(instance,  email_otp, mobile_otp, otp_type):
         expire_time_in_minute = int(settings.OTP_EXPIRATION_TIME_IN_SECONDS/60)
 
         if instance.mobile_number:
-            sender = 'FINZIP'
+            sender = 'Cogncise'
             otp_transaction_type = {1:"Login", 2:"SignUp", 3:"Other"}
 
             if otp_type:
@@ -72,9 +72,9 @@ def send_otp(instance,  email_otp, mobile_otp, otp_type):
                 transaction_type = 'Login'
 
 
-            message = f'Welcome to Finzip!%nOTP for {transaction_type} Transaction is {mobile_otp} and valid for {expire_time_in_minute} minutes. Do not share this OTP to anyone for security reasons. -Finzip'
+            message = f'Welcome to Cogncise!%nOTP for {transaction_type} Transaction is {mobile_otp} and valid for {expire_time_in_minute} minutes. Do not share this OTP to anyone for security reasons. -Cogncise'
 
-            # message = f'{otp} is your one time password to proceed on FinZip. It is valid for {expire_time_in_minute} minutes. Do not share your OTP with anyone for security reasons. -Finzip'
+            # message = f'{otp} is your one time password to proceed on Cogncise. It is valid for {expire_time_in_minute} minutes. Do not share your OTP with anyone for security reasons. -Cogncise'
 
             data['sms_response'] = send_sms(settings.API_KEY_TEXT_LOCAL, instance.mobile_number.as_e164, sender, message)
 
@@ -85,7 +85,7 @@ def send_otp(instance,  email_otp, mobile_otp, otp_type):
         if instance.email:
             email_html_message = "email/otp_email.html"
             email_plaintext_message = "email/otp_email.txt"
-            title = f'OTP from FinZip'
+            title = f'OTP from Cogncise'
             context = {"user": instance, "otp" : email_otp, "expire_time_in_minute" : expire_time_in_minute}
             send_email(instance.email, title, context, email_html_message, email_plaintext_message)
             data.update({'source':"email"})

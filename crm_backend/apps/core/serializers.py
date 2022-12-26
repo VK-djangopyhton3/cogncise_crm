@@ -107,36 +107,10 @@ class OTPLoginSerializer(serializers.Serializer):
     def get_model_object(self, data):
         return User.objects.filter(Q(role_type=data.get('role_type', None)) and (Q(mobile_number=data.get('mobile_number', None)) | Q(email__iexact=data.get('email')))).first()
 
-
 class SendOTPSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
     mobile_number = PhoneNumberField(region="IN", required=False)
-    otp_type = serializers.IntegerField()
-
-    # def validate(self, data):
-    #     email = data.get("email", None)
-    #     mobile_number = data.get("mobile_number", None)
-    #     otp_type = data.get("otp_type")
-        
-    #     verify_mobiles = OTPVerify.objects.filter(mobile_number=mobile_number)
-    #     verify_emails = OTPVerify.objects.filter(email=email)
-
-    #     if (mobile_number and otp_type == 1) and not verify_mobiles.exists():
-    #         raise serializers.ValidationError("User does not exist with that mobile, please register now!")
-
-    #     if (email and otp_type == 1) and not verify_emails.exists():
-    #         raise serializers.ValidationError("User does not exist with that email, please register now!")
-
-    #     if (mobile_number and otp_type == 2) and (verify_mobiles.exists() and verify_mobiles.first().is_registered ):
-    #         raise serializers.ValidationError("User already registered with that mobile, please try to login!")
-
-    #     if (email and otp_type == 2) and (verify_emails.exists() and verify_emails.first().is_registered ):
-    #         raise serializers.ValidationError("User already registered with that email, please try to login!")
-
-    #     if not email and not mobile_number :
-    #         raise serializers.ValidationError("Either email or mobile must be required field.")
-
-    #     return data
+    otp_type = serializers.ChoiceField(required=True, choices=((1, 'Login'), (2, 'SignUp')))
 
 
 class VerifyOTPSerializer(serializers.Serializer):
