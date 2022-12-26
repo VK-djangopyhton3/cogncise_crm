@@ -250,8 +250,8 @@ class OTPVerify(BaseModel):
     # otp = models.CharField(editable=False, default=False, max_length=6) #storing otp
     mobile_counter_secret = models.IntegerField(editable=False, default=0) # storing counter
     email_counter_secret = models.IntegerField(editable=False, default=0) # storing counter
-    email_mfa_secret = models.CharField(_('email mfa secret'), editable=False, max_length=40, default=pyotp.random_base32())
-    mobile_mfa_secret = models.CharField(_('mobile mfa secret'), editable=False, max_length=40, default=pyotp.random_base32())
+    email_mfa_secret = models.CharField(_('email mfa secret'),   editable=False, max_length = 40, default=settings.EMAIL_MFA_SECRET) # type: ignore
+    mobile_mfa_secret = models.CharField(_('mobile mfa secret'), editable=False, max_length = 40, default=settings.MOBILE_MFA_SECRET) # type: ignore
     is_used = models.BooleanField(default=False) #default is True when not using otp is used
     is_verified = models.BooleanField(default=False) #default is True when not using otp email or mobile verification
     is_registered = models.BooleanField(default=False) #default is True when not using otp email or mobile verification

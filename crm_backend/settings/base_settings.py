@@ -25,6 +25,10 @@ sys.path.append(str(BASE_DIR / ''))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
+# MFA secret keys
+EMAIL_MFA_SECRET  = config('EMAIL_MFA_SECRET')
+MOBILE_MFA_SECRET = config('MOBILE_MFA_SECRET')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
