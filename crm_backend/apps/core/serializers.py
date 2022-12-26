@@ -60,9 +60,6 @@ class ShowUserSerializer(serializers.ModelSerializer):
     UserShowSerializer is a model serializer which shows the attributes
     of a user.
     """
-
-    # mobile_number = PhoneNumberField(region="IN")
-
     class Meta:
         """Passing model metadata"""
         model = User
@@ -105,17 +102,18 @@ class OTPLoginSerializer(serializers.Serializer):
         return data
     
     def get_model_object(self, data):
-        return User.objects.filter(Q(role_type=data.get('role_type', None)) and (Q(mobile_number=data.get('mobile_number', None)) | Q(email__iexact=data.get('email')))).first()
+        return User.objects.filter(Q(role_type=data.get('role_type', None)), (Q(mobile_number=data.get('mobile_number', None)) | Q(email__iexact=data.get('email')))).first()
+
 
 class SendOTPSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
-    mobile_number = PhoneNumberField(region="IN", required=False)
+    mobile_number = PhoneNumberField(region="AU", required=False)
     otp_type = serializers.ChoiceField(required=True, choices=((1, 'Login'), (2, 'SignUp')))
 
 
 class VerifyOTPSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
-    mobile_number = PhoneNumberField(region="IN", required=False)
+    mobile_number = PhoneNumberField(region="AU", required=False)
     email_otp = serializers.CharField(required=True, min_length=6, max_length=6)
     mobile_otp = serializers.CharField(required=True, min_length=6, max_length=6)
 

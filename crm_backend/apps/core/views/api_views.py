@@ -336,6 +336,7 @@ class SendOTPView(generics.GenericAPIView):
                     else: 
                         otp_instance.login_otp_via_email = False
                         otp_instance.save()
+
                     response = otp_instance.generate_and_send_otp(data.get('otp_type'))
                     if response.is_sent:
                         return return_response("OTP has been sent on your mobile number or email!", True, 'OTP has been sent on your mobile number or email, Please check your email or mobile!', status.HTTP_200_OK)
